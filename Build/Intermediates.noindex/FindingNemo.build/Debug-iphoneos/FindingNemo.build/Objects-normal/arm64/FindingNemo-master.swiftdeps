@@ -1,0 +1,18 @@
+version: "Apple Swift version 5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+options: "fbe3abd0d308ed460d28629207b776df"
+build_time: [1574569770, 170354000]
+inputs:
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Services/FirServices.swift": [1574528792, 396821389]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Global/UserManager.swift": [1574528089, 29839479]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Helper/LocationManager.swift": [1574569404, 599378415]
+  "/Users/Leex/FindingNemo/FindingNemo/ViewController.swift": [1574535184, 911799123]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Services/FetchService.swift": [1574569733, 640942000]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Operator/Connecter.swift": [1574569769, 990049296]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Models/User/UserBuilder.swift": [1574528063, 580045571]
+  "/Users/Leex/FindingNemo/FindingNemo/AppDelegate.swift": [1574364431, 178797500]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Models/User/User.swift": [1574528062, 484344139]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Services/UpdateService.swift": [1574569237, 615792826]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Operator/Finder.swift": [1574569477, 744238045]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/Operator/UserOperator.swift": [1574443426, 802638976]
+  "/Users/Leex/FindingNemo/FindingNemo/UserAction/UserAction.swift": [1574569425, 490890072]
+  "/Users/Leex/FindingNemo/FindingNemo/SceneDelegate.swift": [1574267388, 122298832]

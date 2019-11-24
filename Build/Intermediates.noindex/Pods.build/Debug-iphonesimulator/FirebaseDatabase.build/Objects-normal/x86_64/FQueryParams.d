@@ -1,0 +1,29 @@
+dependencies: \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Core/FQueryParams.m \
+  /Users/Leex/FindingNemo/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/FirebaseDatabase.build/module.modulemap \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Core/FQueryParams.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Constants/FConstants.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/FIndex.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Core/View/Filter/FIndexedFilter.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Core/View/Filter/FNodeFilter.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Core/View/Filter/FLimitedFilter.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Snapshot/FNode.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Core/Utilities/FPath.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Api/Private/FTypedefs_Private.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/FPriorityIndex.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/FRangedFilter.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Snapshot/FSnapshotUtilities.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Utilities/FUtilities.h \
+  /Users/Leex/FindingNemo/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/FirebaseCore.build/module.modulemap \
+  /Users/Leex/FindingNemo/Pods/FirebaseCore/Firebase/Core/Private/FIRLogger.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseCore/Firebase/Core/Public/FIROptions.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseCore/Firebase/Core/Public/FirebaseCore.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseCore/Firebase/Core/Public/FIRLoggerLevel.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseCore/Firebase/Core/Public/FIRConfiguration.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseCore/Firebase/Core/Public/FIRApp.h \
+  /Users/Leex/FindingNemo/Pods/Target\ Support\ Files/FirebaseCore/FirebaseCore-umbrella.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Utilities/FParsedUrl.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Core/FRepoInfo.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Utilities/FValidation.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Public/FIRDataEventType.h \
+  /Users/Leex/FindingNemo/Pods/FirebaseDatabase/Firebase/Database/Utilities/FTypedefs.h

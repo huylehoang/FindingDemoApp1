@@ -1,0 +1,527 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1033171A2386690D0037682D /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103317192386690D0037682D /* UpdateService.swift */; };
+		1033172023870B2B0037682D /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1033171F23870B2B0037682D /* UserAction.swift */; };
+		10792DC52385A17C00EC278F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DC42385A17C00EC278F /* AppDelegate.swift */; };
+		10792DC72385A17C00EC278F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DC62385A17C00EC278F /* SceneDelegate.swift */; };
+		10792DC92385A17C00EC278F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DC82385A17C00EC278F /* ViewController.swift */; };
+		10792DCC2385A17C00EC278F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10792DCA2385A17C00EC278F /* Main.storyboard */; };
+		10792DCE2385A17E00EC278F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10792DCD2385A17E00EC278F /* Assets.xcassets */; };
+		10792DD12385A17E00EC278F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10792DCF2385A17E00EC278F /* LaunchScreen.storyboard */; };
+		10792DD92385A30000EC278F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10792DD82385A30000EC278F /* GoogleService-Info.plist */; };
+		10792DDD2385A74100EC278F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DDC2385A74100EC278F /* LocationManager.swift */; };
+		10792DE02385B79D00EC278F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DDF2385B79D00EC278F /* User.swift */; };
+		10792DE32385BF1300EC278F /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DE22385BF1300EC278F /* UserManager.swift */; };
+		10792DE62385C40B00EC278F /* Finder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DE52385C40B00EC278F /* Finder.swift */; };
+		10792DE82385C65A00EC278F /* UserOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DE72385C65A00EC278F /* UserOperator.swift */; };
+		10792DEA2385C6AC00EC278F /* Connecter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DE92385C6AC00EC278F /* Connecter.swift */; };
+		10792DEE238635A400EC278F /* UserBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DED238635A400EC278F /* UserBuilder.swift */; };
+		10ACF2272386458600518785 /* FirServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ACF2262386458600518785 /* FirServices.swift */; };
+		10ACF229238645DC00518785 /* FetchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ACF228238645DC00518785 /* FetchService.swift */; };
+		C232F6ACAC60B8BAF3CC39EF /* Pods_FindingNemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0A098957F07C01128858099 /* Pods_FindingNemo.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		103317192386690D0037682D /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
+		1033171F23870B2B0037682D /* UserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
+		10792DC12385A17C00EC278F /* FindingNemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindingNemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		10792DC42385A17C00EC278F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		10792DC62385A17C00EC278F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		10792DC82385A17C00EC278F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		10792DCB2385A17C00EC278F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		10792DCD2385A17E00EC278F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		10792DD02385A17E00EC278F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		10792DD22385A17E00EC278F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		10792DD82385A30000EC278F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		10792DDC2385A74100EC278F /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		10792DDF2385B79D00EC278F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		10792DE22385BF1300EC278F /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		10792DE52385C40B00EC278F /* Finder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Finder.swift; sourceTree = "<group>"; };
+		10792DE72385C65A00EC278F /* UserOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserOperator.swift; sourceTree = "<group>"; };
+		10792DE92385C6AC00EC278F /* Connecter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connecter.swift; sourceTree = "<group>"; };
+		10792DED238635A400EC278F /* UserBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBuilder.swift; sourceTree = "<group>"; };
+		10ACF2262386458600518785 /* FirServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirServices.swift; sourceTree = "<group>"; };
+		10ACF228238645DC00518785 /* FetchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchService.swift; sourceTree = "<group>"; };
+		A8005695094BB5A851741A57 /* Pods-FindingNemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FindingNemo.release.xcconfig"; path = "Target Support Files/Pods-FindingNemo/Pods-FindingNemo.release.xcconfig"; sourceTree = "<group>"; };
+		E0A098957F07C01128858099 /* Pods_FindingNemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FindingNemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2AF122C91B4512EBFBBA18D /* Pods-FindingNemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FindingNemo.debug.xcconfig"; path = "Target Support Files/Pods-FindingNemo/Pods-FindingNemo.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		10792DBE2385A17C00EC278F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C232F6ACAC60B8BAF3CC39EF /* Pods_FindingNemo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		107902B723878F550007B777 /* UserAction */ = {
+			isa = PBXGroup;
+			children = (
+				10792DEB2385C74300EC278F /* Services */,
+				10792DE42385C3DB00EC278F /* Operator */,
+				10792DE12385BEEE00EC278F /* Global */,
+				10792DDE2385B78B00EC278F /* Models */,
+				10792DDB2385A60200EC278F /* Helper */,
+				1033171F23870B2B0037682D /* UserAction.swift */,
+			);
+			path = UserAction;
+			sourceTree = "<group>";
+		};
+		10792DB82385A17C00EC278F = {
+			isa = PBXGroup;
+			children = (
+				10792DC32385A17C00EC278F /* FindingNemo */,
+				10792DC22385A17C00EC278F /* Products */,
+				3BF3C9DB1F49E4AD12D9E22B /* Pods */,
+				816EECD48BAC8CA834636C11 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		10792DC22385A17C00EC278F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				10792DC12385A17C00EC278F /* FindingNemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		10792DC32385A17C00EC278F /* FindingNemo */ = {
+			isa = PBXGroup;
+			children = (
+				107902B723878F550007B777 /* UserAction */,
+				10792DDA2385A30400EC278F /* SupportingFiles */,
+				10792DC42385A17C00EC278F /* AppDelegate.swift */,
+				10792DC62385A17C00EC278F /* SceneDelegate.swift */,
+				10792DC82385A17C00EC278F /* ViewController.swift */,
+				10792DCA2385A17C00EC278F /* Main.storyboard */,
+				10792DD22385A17E00EC278F /* Info.plist */,
+			);
+			path = FindingNemo;
+			sourceTree = "<group>";
+		};
+		10792DDA2385A30400EC278F /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				10792DCD2385A17E00EC278F /* Assets.xcassets */,
+				10792DD82385A30000EC278F /* GoogleService-Info.plist */,
+				10792DCF2385A17E00EC278F /* LaunchScreen.storyboard */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		10792DDB2385A60200EC278F /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				10792DDC2385A74100EC278F /* LocationManager.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		10792DDE2385B78B00EC278F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				10792DEC2386359600EC278F /* User */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		10792DE12385BEEE00EC278F /* Global */ = {
+			isa = PBXGroup;
+			children = (
+				10792DE22385BF1300EC278F /* UserManager.swift */,
+			);
+			path = Global;
+			sourceTree = "<group>";
+		};
+		10792DE42385C3DB00EC278F /* Operator */ = {
+			isa = PBXGroup;
+			children = (
+				10792DE72385C65A00EC278F /* UserOperator.swift */,
+				10792DE52385C40B00EC278F /* Finder.swift */,
+				10792DE92385C6AC00EC278F /* Connecter.swift */,
+			);
+			path = Operator;
+			sourceTree = "<group>";
+		};
+		10792DEB2385C74300EC278F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				10ACF2262386458600518785 /* FirServices.swift */,
+				10ACF228238645DC00518785 /* FetchService.swift */,
+				103317192386690D0037682D /* UpdateService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		10792DEC2386359600EC278F /* User */ = {
+			isa = PBXGroup;
+			children = (
+				10792DDF2385B79D00EC278F /* User.swift */,
+				10792DED238635A400EC278F /* UserBuilder.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		3BF3C9DB1F49E4AD12D9E22B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E2AF122C91B4512EBFBBA18D /* Pods-FindingNemo.debug.xcconfig */,
+				A8005695094BB5A851741A57 /* Pods-FindingNemo.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		816EECD48BAC8CA834636C11 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E0A098957F07C01128858099 /* Pods_FindingNemo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		10792DC02385A17C00EC278F /* FindingNemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 10792DD52385A17E00EC278F /* Build configuration list for PBXNativeTarget "FindingNemo" */;
+			buildPhases = (
+				118BE85F95A3EA9295AF474E /* [CP] Check Pods Manifest.lock */,
+				10792DBD2385A17C00EC278F /* Sources */,
+				10792DBE2385A17C00EC278F /* Frameworks */,
+				10792DBF2385A17C00EC278F /* Resources */,
+				856B5545017F25F79D4A4433 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FindingNemo;
+			productName = FindingNemo;
+			productReference = 10792DC12385A17C00EC278F /* FindingNemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		10792DB92385A17C00EC278F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1110;
+				LastUpgradeCheck = 1110;
+				ORGANIZATIONNAME = LeeX;
+				TargetAttributes = {
+					10792DC02385A17C00EC278F = {
+						CreatedOnToolsVersion = 11.1;
+					};
+				};
+			};
+			buildConfigurationList = 10792DBC2385A17C00EC278F /* Build configuration list for PBXProject "FindingNemo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 10792DB82385A17C00EC278F;
+			productRefGroup = 10792DC22385A17C00EC278F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				10792DC02385A17C00EC278F /* FindingNemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		10792DBF2385A17C00EC278F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				10792DD12385A17E00EC278F /* LaunchScreen.storyboard in Resources */,
+				10792DD92385A30000EC278F /* GoogleService-Info.plist in Resources */,
+				10792DCE2385A17E00EC278F /* Assets.xcassets in Resources */,
+				10792DCC2385A17C00EC278F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		118BE85F95A3EA9295AF474E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FindingNemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		856B5545017F25F79D4A4433 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FindingNemo/Pods-FindingNemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FindingNemo/Pods-FindingNemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FindingNemo/Pods-FindingNemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		10792DBD2385A17C00EC278F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				10ACF2272386458600518785 /* FirServices.swift in Sources */,
+				10792DE32385BF1300EC278F /* UserManager.swift in Sources */,
+				10792DDD2385A74100EC278F /* LocationManager.swift in Sources */,
+				10792DC92385A17C00EC278F /* ViewController.swift in Sources */,
+				10ACF229238645DC00518785 /* FetchService.swift in Sources */,
+				10792DEA2385C6AC00EC278F /* Connecter.swift in Sources */,
+				10792DEE238635A400EC278F /* UserBuilder.swift in Sources */,
+				10792DC52385A17C00EC278F /* AppDelegate.swift in Sources */,
+				10792DE02385B79D00EC278F /* User.swift in Sources */,
+				1033171A2386690D0037682D /* UpdateService.swift in Sources */,
+				10792DE62385C40B00EC278F /* Finder.swift in Sources */,
+				10792DE82385C65A00EC278F /* UserOperator.swift in Sources */,
+				1033172023870B2B0037682D /* UserAction.swift in Sources */,
+				10792DC72385A17C00EC278F /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		10792DCA2385A17C00EC278F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				10792DCB2385A17C00EC278F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		10792DCF2385A17E00EC278F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				10792DD02385A17E00EC278F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		10792DD32385A17E00EC278F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		10792DD42385A17E00EC278F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		10792DD62385A17E00EC278F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2AF122C91B4512EBFBBA18D /* Pods-FindingNemo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KVCFKUZZ6;
+				INFOPLIST_FILE = FindingNemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LeeX.FindingNemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		10792DD72385A17E00EC278F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A8005695094BB5A851741A57 /* Pods-FindingNemo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KVCFKUZZ6;
+				INFOPLIST_FILE = FindingNemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LeeX.FindingNemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		10792DBC2385A17C00EC278F /* Build configuration list for PBXProject "FindingNemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10792DD32385A17E00EC278F /* Debug */,
+				10792DD42385A17E00EC278F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		10792DD52385A17E00EC278F /* Build configuration list for PBXNativeTarget "FindingNemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10792DD62385A17E00EC278F /* Debug */,
+				10792DD72385A17E00EC278F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 10792DB92385A17C00EC278F /* Project object */;
+}
