@@ -37,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillTerminate(_ application: UIApplication) {
         UserManager.shared.set(isFinding: false)
-        UpdateUserService().execute()
     }
 
 }

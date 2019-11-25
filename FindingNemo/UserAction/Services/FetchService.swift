@@ -11,6 +11,7 @@ import FirebaseDatabase
 import GeoFire
 
 typealias FetchServiceHandler = (User?) -> Void
+typealias FetchServiceSnapshotHandler = (Bool, DataSnapshot) -> Void
 
 private extension Double {
     var toKM: Double {
@@ -33,6 +34,11 @@ class FetchNearbyUserService: FirService {
     func execute(completion: @escaping FetchServiceHandler) {
         guard UserManager.shared.readyForUpdatingLocation else { return }
         geoFire.setLocation(UserManager.shared.currentCLLocation, forKey: UserManager.shared.currentUser.uuid)
+        startQueryNearbyUser(completion: completion)
+    }
+    
+    private func startQueryNearbyUser(completion: @escaping FetchServiceHandler) {
+        guard UserManager.shared.needFetchNearByUser else { return }
         geoQuery = geoFire.query(at: UserManager.shared.currentCLLocation, withRadius: radius.toKM)
         geoQuery?.observe(.keyEntered, with: { (key, _) in
             guard key != self.currentUser.uuid else { return }
@@ -53,12 +59,18 @@ class FetchNearbyUserService: FirService {
 
 class FetchUserService: FirService {
     func execute(fetchByUUID uuid: String, completion: @escaping FetchServiceHandler) {
-        databaseRef.child(uuid).observeSingleEvent(of: .value) { (snapshot) in
-            if snapshot.exists() {
+        execute(fetchByUUID: uuid) { (exists, snapshot) in
+            if exists {
                 completion(User(builder: UserBuilder(with: snapshot)))
             } else {
                 completion(nil)
             }
+        }
+    }
+    
+    func execute(fetchByUUID uuid: String, completion: @escaping FetchServiceSnapshotHandler) {
+        databaseRef.child(uuid).observeSingleEvent(of: .value) { (snapshot) in
+            completion(snapshot.exists(), snapshot)
         }
     }
 }

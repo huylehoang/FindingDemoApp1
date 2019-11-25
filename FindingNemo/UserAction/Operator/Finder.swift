@@ -27,23 +27,14 @@ private extension UserFinder {
             switch result {
             case .success(let location):
                 UserManager.shared.set(isFinding: true)
-                UserManager.shared.set(latitude: location.latitude)
-                UserManager.shared.set(longtitude: location.longitude)
+                UserManager.shared.set(location: location)
                 self.handler?(true, nil)
-                self.startUpdate()
+                self.startFetcher()
             case .failure(let error):
                 print("Error: \(String(describing: error.errorDescription))")
                 UserManager.shared.set(isFinding: false)
                 self.updateService.execute(withValues: .basic)
                 self.handler?(false, nil)
-            }
-        }
-    }
-    
-    func startUpdate() {
-        self.updateService.execute(withValues: .basic) { (updated) in
-            if updated {
-                self.startFetcher()
             }
         }
     }

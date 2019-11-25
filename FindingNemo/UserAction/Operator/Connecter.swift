@@ -24,7 +24,6 @@ private extension UserConnectOperator {
     }
     
     private func updateCurrentUserToDatabase() {
-        UserManager.shared.set(isFinding: false)
         if isConnecter {
             if let connecterUserKey = connectedUser?.uuid {
                 UserManager.shared.set(connectedToUUID: connecterUserKey)
