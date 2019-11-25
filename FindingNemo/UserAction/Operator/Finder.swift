@@ -33,7 +33,6 @@ private extension UserFinder {
             case .failure(let error):
                 print("Error: \(String(describing: error.errorDescription))")
                 UserManager.shared.set(isFinding: false)
-                self.updateService.execute(withValues: .basic)
                 self.handler?(false, nil)
             }
         }
