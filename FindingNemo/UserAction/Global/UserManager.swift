@@ -19,13 +19,30 @@ class UserManager {
         return builder.readyForUpdatingLocation
     }
     
+    var noConnedtedUUID: Bool {
+        return builder.connectedToUUID == nil
+    }
+    
     var needFetchNearByUser: Bool {
-        return builder.isFinding && builder.connectedToUUID == nil
+        return builder.isFinding && noConnedtedUUID
+    }
+    
+    var readyForDirectionToConnectedUser: Bool {
+        return !needFetchNearByUser && readyForUpdatingLocation
     }
     
     var currentCLLocation: CLLocation {
         return CLLocation(latitude: builder.localLatitude, longitude: builder.localLongtitude)
     }
+    
+    private var connectedLatitude: CLLocationDegrees?
+    private var connectedLongtitude: CLLocationDegrees?
+    
+    var connectedCLLLocation: CLLocation? {
+        return _connectedCLLLocation
+    }
+    
+    private var _connectedCLLLocation: CLLocation?
     
     private var builder: UserBuilder!
 
@@ -38,6 +55,19 @@ class UserManager {
         FetchUserService().execute(fetchByUUID: builder.uuid) { (exists, snapshot) in
             if exists {
                 self.builder = UserBuilder(with: snapshot)
+                FetchUserService().checkConnectedCurrentUser { (stillConnected) in
+                    print("HUY C 11")
+                    if stillConnected {
+                        UserDisconnecter().execute()
+                    } else {
+                        if self.builder.connectedToUUID != nil {
+                            self.set(connectedToUUID: nil)
+                            UpdateUserService().execute(withValues: .connectedUUID(connected: false))
+                        } else if self.builder.isFinding {
+                            self.set(isFinding: false)
+                        }
+                    }
+                }
             }
         }
     }
@@ -48,17 +78,22 @@ class UserManager {
     }
     
     func set(isFinding: Bool) {
-        if builder.connectedToUUID == nil && builder.isFinding {
-            builder.isFinding = false
-            UpdateUserService().execute()
-        } else if builder.isFinding != isFinding {
-            builder.isFinding = isFinding
-            UpdateUserService().execute()
-        }
+        guard builder.isFinding != isFinding else { return }
+        builder.isFinding = isFinding
+        UpdateUserService().execute()
     }
     
     func set(connectedToUUID: String?) {
-        builder.isFinding = !(connectedToUUID != nil)
+        builder.isFinding = false
         builder.connectedToUUID = connectedToUUID
+    }
+    
+    func set(connectedLocation: CLLocation?) {
+        self._connectedCLLLocation = connectedLocation
+    }
+    
+    func appWillTerminated() {
+        self.set(connectedToUUID: nil)
+        UpdateUserService().execute(withValues: .connectedUUID(connected: false))
     }
 }

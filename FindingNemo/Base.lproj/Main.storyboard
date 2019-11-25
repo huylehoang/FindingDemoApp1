@@ -28,11 +28,20 @@
                                     <action selector="buttonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eA6-Yf-IQ2"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="up-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Jcx-Uh-LPx">
+                                <rect key="frame" x="132" y="229" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Jcx-Uh-LPx" secondAttribute="height" multiplier="1:1" id="qdF-hc-1rF"/>
+                                    <constraint firstAttribute="width" constant="150" id="yx8-Ze-oIR"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="yyn-95-33V" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="5CA-yW-3FB"/>
+                            <constraint firstItem="Jcx-Uh-LPx" firstAttribute="centerX" secondItem="yyn-95-33V" secondAttribute="centerX" id="5W7-SX-GES"/>
                             <constraint firstItem="zBi-mq-Pvp" firstAttribute="centerX" secondItem="yyn-95-33V" secondAttribute="centerX" id="7LF-Zb-3It"/>
+                            <constraint firstItem="yyn-95-33V" firstAttribute="top" secondItem="Jcx-Uh-LPx" secondAttribute="bottom" constant="64" id="DTB-ad-L2T"/>
                             <constraint firstItem="zBi-mq-Pvp" firstAttribute="top" secondItem="yyn-95-33V" secondAttribute="bottom" constant="54.5" id="ENe-6V-GIe"/>
                             <constraint firstItem="yyn-95-33V" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" constant="-32" id="rh3-EB-Ajs"/>
                             <constraint firstItem="yyn-95-33V" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="tBF-yh-m2S"/>
@@ -40,6 +49,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="arrowImgView" destination="Jcx-Uh-LPx" id="GA4-7L-ccU"/>
                         <outlet property="lblInfo" destination="yyn-95-33V" id="66Q-As-9wp"/>
                         <outlet property="mainBtn" destination="zBi-mq-Pvp" id="c4X-LX-KEu"/>
                     </connections>
@@ -49,4 +59,7 @@
             <point key="canvasLocation" x="137.68115942028987" y="109.82142857142857"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="up-arrow" width="512" height="512"/>
+    </resources>
 </document>

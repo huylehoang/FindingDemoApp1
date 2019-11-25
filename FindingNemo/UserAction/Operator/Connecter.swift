@@ -14,8 +14,16 @@ protocol UserConnectOperator: class, UserOperator {
 }
 
 private extension UserConnectOperator {
-    
+    var fetchUserService: FetchUserService {
+        return FetchUserService()
+    }
+}
+
+private extension UserConnectOperator {
     func updateDataBase() {
+        if let connecter = self as? UserConnecter {
+            connecter.isConnecting = true
+        }
         guard let _ = connectedUser else {
             handler?(false, nil)
             return
@@ -31,7 +39,7 @@ private extension UserConnectOperator {
         } else {
             UserManager.shared.set(connectedToUUID: nil)
         }
-        updateService.execute(withValues: .connectedUUID) { (updated) in
+        updateService.execute(withValues: .connectedUUID(connected: isConnecter)) { (updated) in
             if !updated {
                 self.handler?(false, nil)
                 return
@@ -42,14 +50,22 @@ private extension UserConnectOperator {
     
     private func updateConnectedUserToDatabase() {
         guard connectedUser != nil else { return }
-        updateService.execute(updateUser: isConnecter ?
-            connectedUser! : User(builder: UserBuilder(builderClosure: { (builder) in
+        if isConnecter {
+            updateService.execute(updateUser: connectedUser!, withValues: .connectedUUID(connected: true)) { (updated) in
+                if updated {
+                    self.fetchUserService.checkConnectedCurrentUser { (isConnected) in
+                        self.handler?(isConnected, nil)
+                    }
+                }
+            }
+        } else {
+            updateService.execute(updateUser: User(builder: UserBuilder(builderClosure: { (builder) in
                 builder.uuid = self.connectedUser!.uuid
-                builder.isFinding = self.connectedUser!.isFinding
+                builder.isFinding = false
                 builder.connectedToUUID = nil
-            })), withValues: .connectedUUID)
-        { (updated) in
-            self.handler?(updated, nil)
+            })), withValues: .connectedUUID(connected: false)) { (isDisconnected) in
+                self.handler?(isDisconnected, nil)
+            }
         }
     }
 }
@@ -58,6 +74,8 @@ class UserConnecter: UserConnectOperator {
     var connectedUser: User?
     var handler: UserHandler?
     var isConnecter: Bool
+    fileprivate var observeConnectivity = false
+    fileprivate var isConnecting = false
     
     init() {
         self.isConnecter = true
@@ -68,30 +86,51 @@ class UserConnecter: UserConnectOperator {
     }
     
     func execute() {
+        guard observeConnectivity == false else { return }
         updateDataBase()
     }
     
+    func reset() {
+        observeConnectivity = false
+        isConnecting = false
+    }
+    
     func checkUserIsConnectedAndStopUpdatingLocation() {
-        updateService.userObserver { (user) in
-            guard let user = user else { return }
+        setupConnectedObserver()
+        setupDisConnectedObserver()
+    }
+    
+    private func setupConnectedObserver() {
+        updateService.userConnectedObserver { (connectedUUID) in
+            guard self.isConnecting == false, let connectedUUID = connectedUUID else { return }
             if UserManager.shared.currentUser.connectedToUUID == nil,
-                let connectedUser = user.connectedToUUID,
-                user.isFinding == false
+                connectedUUID != UserManager.shared.currentUser.uuid
             {
-                LocationManager.shared.stopUpdatingLocation()
-                UserManager.shared.set(connectedToUUID: connectedUser)
-                self.handler?(true, nil)
+                self.checkUserConnectivity(with: connectedUUID)
             }
         }
+    }
+    
+    private func setupDisConnectedObserver() {
+        updateService.userDisconnectedObserver { (connectedUUID) in
+            guard self.isConnecting == false, let _ = connectedUUID else { return }
+            if UserManager.shared.currentUser.connectedToUUID != nil {
+                LocationManager.shared.stopUpdatingLocation(bySpecific: LocationError.turnOffByDisconnectFromOtherUser)
+                self.checkUserConnectivity(with: nil)
+            }
+        }
+    }
+    
+    private func checkUserConnectivity(with connectedUUID: String?) {
+        observeConnectivity = true
+        UserManager.shared.set(connectedToUUID: connectedUUID)
+        self.handler?(connectedUUID != nil, UserManager.shared.currentUser)
     }
 }
 
 class UserDisconnecter: UserConnectOperator {
     var connectedUser: User?
     var isConnecter: Bool
-    lazy private var fetchService = {
-        return FetchUserService()
-    }()
     var handler: UserHandler?
     private var retryTime = 3
     private var retryCounter = 0
@@ -102,7 +141,7 @@ class UserDisconnecter: UserConnectOperator {
     
     func execute() {
         if let connectedUUID = UserManager.shared.currentUser.connectedToUUID {
-            fetchService.execute(fetchByUUID: connectedUUID) { (user) in
+            fetchUserService.execute(fetchByUUID: connectedUUID) { (user) in
                 self.connectedUser = user
                 self.updateDataBase()
             }

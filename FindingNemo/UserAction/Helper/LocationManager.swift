@@ -14,6 +14,7 @@ enum LocationError: LocalizedError {
     case accessDenied
     case invalidLocation
     case turnOff
+    case turnOffByDisconnectFromOtherUser
     case other(Error)
     
     var errorDescription: String? {
@@ -26,6 +27,8 @@ enum LocationError: LocalizedError {
             return "Cannot get the user location"
         case .turnOff:
             return "Turn off updating location"
+        case .turnOffByDisconnectFromOtherUser:
+            return "Disconnect from other user"
         case .other(let error):
             return error.localizedDescription
         }
@@ -35,11 +38,18 @@ enum LocationError: LocalizedError {
 class LocationManager: NSObject {
     static let shared = LocationManager()
     
-    typealias UpdatedLocation = (Result<CLLocationCoordinate2D, LocationError>) -> Void
-    var currentLocation: UpdatedLocation?
+    typealias LocationCallBack = (CLLocationCoordinate2D) -> Void
+    typealias HeadingCallBack = (CLLocationDirection) -> Void
+    typealias ErrorCallback = (LocationError) -> Void
+    var currentLocation: LocationCallBack?
+    var currentHeading: HeadingCallBack?
+    var error: ErrorCallback?
     
     private var locationManager: CLLocationManager!
-    private var isUpdating: Bool = false
+    private var isUpdatingLocation: Bool = false
+    private var isUpdatingHeading: Bool = false
+    private var distanceFilter: CLLocationDistance = 2.5
+    private var headingFilter: CLLocationDegrees = 5
     
     override init() {
         super.init()
@@ -50,6 +60,7 @@ class LocationManager: NSObject {
         self.locationManager = CLLocationManager()
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         self.locationManager.distanceFilter = 2.5
+        self.locationManager.headingFilter = headingFilter
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.requestLocation()
@@ -58,16 +69,37 @@ class LocationManager: NSObject {
     }
     
     func startUpdatingLocation() {
-        guard !isUpdating else { return }
+        guard !isUpdatingLocation else { return }
         self.locationManager.startUpdatingLocation()
-        isUpdating = true
+        isUpdatingLocation = true
     }
     
-    func stopUpdatingLocation() {
-        guard isUpdating else { return }
+    func stopUpdatingLocation(bySpecific error: LocationError? = nil) {
+        guard isUpdatingLocation else { return }
         self.locationManager.stopUpdatingLocation()
-        isUpdating = false
-        currentLocation?(.failure(.turnOff))
+        self.stopUpdatingHeading()
+        isUpdatingLocation = false
+        if let error = error {
+            self.error?(error)
+        } else {
+            self.error?(.turnOff)
+        }
+    }
+    
+    func startUpdatingHeading() {
+        guard !isUpdatingHeading else { return }
+        self.locationManager.startUpdatingHeading()
+        isUpdatingHeading = true
+    }
+    
+    private func stopUpdatingHeading() {
+        guard isUpdatingHeading else { return }
+        self.locationManager.stopUpdatingHeading()
+        isUpdatingHeading = false
+    }
+    
+    func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
+        return true
     }
     
 }
@@ -75,14 +107,14 @@ class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         guard CLLocationManager.locationServicesEnabled() else {
-            currentLocation?(.failure(.serviceNotFound))
+            error?(.serviceNotFound)
             return
         }
         switch status {
         case .authorizedAlways:
-            startUpdatingLocation()
+            self.startUpdatingLocation()
         case .authorizedWhenInUse, .denied, .restricted:
-            currentLocation?(.failure(.accessDenied))
+            self.error?(.accessDenied)
         case .notDetermined:
             self.locationManager.requestAlwaysAuthorization()
         @unknown default:
@@ -92,13 +124,17 @@ extension LocationManager: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
-            currentLocation?(.failure(.invalidLocation))
+            self.error?(.invalidLocation)
             return
         }
-        currentLocation?(.success(location.coordinate))
+        self.currentLocation?(location.coordinate)
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        self.currentHeading?(newHeading.trueHeading)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        currentLocation?(.failure(.other(error)))
+        self.error?(.other(error))
     }
 }

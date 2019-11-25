@@ -7,11 +7,14 @@
 //
 
 import Foundation
+import UIKit
 
 enum UserActionState {
-    case finding(_ isFinding: Bool)
+    case finding
     case didConnect
     case didDisconnect
+    case direction(angle: CGFloat)
+    case locationError(errror: LocationError)
 }
 
 protocol UserActionProtocol {
@@ -65,17 +68,23 @@ private class UserActionHandler: UserActionProtocol {
     }
     
     private func setup() {
-        (connecter as! UserConnecter).checkUserIsConnectedAndStopUpdatingLocation()
+        connecter.asConnecter.checkUserIsConnectedAndStopUpdatingLocation()
         
-        connecter.handler = { (connected, _) in
+        connecter.handler = { (connected, user) in
             guard let connected = connected else { return }
             if connected {
                 print("Connected")
+                self.finder.asFinder.startCalculateDirection()
                 self.action?(.didConnect)
             } else {
-                print("Re-finding")
-                self.finder.execute()
+                if user == nil {
+                    print("Re-finding")
+                    self.finder.execute()
+                } else {
+                    print("Connected User is disconnected")
+                }
             }
+            self.connecter.asConnecter.reset()
         }
         
         disconnecter.handler = { (disconnected, _) in
@@ -85,17 +94,25 @@ private class UserActionHandler: UserActionProtocol {
                 self.action?(.didDisconnect)
             } else {
                 print("Error while disconnecting")
-                (self.disconnecter as! UserDisconnecter).retry()
+                self.disconnecter.asDisconnecter.retry()
             }
         }
         
         finder.handler = { (isFinding, connectedUser) in
-            if let isFinding = isFinding {
-                self.action?(.finding(isFinding))
+            if let _ = isFinding {
+                self.action?(.finding)
             } else if let user = connectedUser {
-                (self.connecter as! UserConnecter).connect(to: user)
+                self.connecter.asConnecter.connect(to: user)
                 self.connecter.execute()
             }
+        }
+        
+        finder.asFinder.calculatedAngle = { (angle) in
+            self.action?(.direction(angle: angle))
+        }
+        
+        finder.asFinder.locationError = { (error) in
+            self.action?(.locationError(errror: error))
         }
     }
     
@@ -108,8 +125,21 @@ private class UserActionHandler: UserActionProtocol {
     }
     
     func disconnect() {
+        LocationManager.shared.stopUpdatingLocation()
         disconnecter.execute()
     }
 }
 
-
+private extension UserOperator {
+    var asFinder: UserFinder {
+        return self as! UserFinder
+    }
+    
+    var asConnecter: UserConnecter {
+        return self as! UserConnecter
+    }
+    
+    var asDisconnecter: UserDisconnecter {
+        return self as! UserDisconnecter
+    }
+}

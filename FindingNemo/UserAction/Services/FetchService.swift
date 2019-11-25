@@ -35,6 +35,20 @@ class FetchNearbyUserService: FirService {
         guard UserManager.shared.readyForUpdatingLocation else { return }
         geoFire.setLocation(UserManager.shared.currentCLLocation, forKey: UserManager.shared.currentUser.uuid)
         startQueryNearbyUser(completion: completion)
+        getConnectedLocation()
+    }
+    
+    private func getConnectedLocation() {
+        guard UserManager.shared.readyForDirectionToConnectedUser else { return }
+        FetchUserService().checkConnectedCurrentUser { (isConnected) in
+            if isConnected, let connectedUUId = UserManager.shared.currentUser.connectedToUUID {
+                self.geoFire.getLocationForKey(connectedUUId) { (location, error) in
+                    if error == nil {
+                        UserManager.shared.set(connectedLocation: location)
+                    }
+                }
+            }
+        }
     }
     
     private func startQueryNearbyUser(completion: @escaping FetchServiceHandler) {
@@ -47,7 +61,7 @@ class FetchNearbyUserService: FirService {
                     completion(User(builder: UserBuilder(builderClosure: { (builder) in
                         builder.uuid = user.uuid
                         builder.isFinding = false
-                        builder.connectedToUUID = UserManager.shared.currentUser.uuid
+                        builder.connectedToUUID = self.currentUser.uuid
                     })))
                 } else {
                     completion(nil)
@@ -71,6 +85,29 @@ class FetchUserService: FirService {
     func execute(fetchByUUID uuid: String, completion: @escaping FetchServiceSnapshotHandler) {
         databaseRef.child(uuid).observeSingleEvent(of: .value) { (snapshot) in
             completion(snapshot.exists(), snapshot)
+        }
+    }
+    
+    func checkConnectedCurrentUser(completion: @escaping (Bool) -> Void) {
+        execute(fetchByUUID: UserManager.shared.currentUser.uuid) { (user) in
+            if let currentUser = user,
+                let connectedUUID = currentUser.connectedToUUID,
+                currentUser.isFinding == false
+            {
+                self.execute(fetchByUUID: connectedUUID) { (connectedUser) in
+                    if let connectedUser = connectedUser,
+                        let connectedUuidOfConnected = connectedUser.connectedToUUID,
+                        connectedUser.isFinding == false,
+                        connectedUuidOfConnected == UserManager.shared.currentUser.uuid
+                    {
+                        completion(true)
+                    } else {
+                        completion(false)
+                    }
+                }
+            } else {
+                completion(false)
+            }
         }
     }
 }

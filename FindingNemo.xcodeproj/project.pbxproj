@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1004171B238BBD81007E429B /* DirectionCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1004171A238BBD81007E429B /* DirectionCalculator.swift */; };
 		1033171A2386690D0037682D /* UpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103317192386690D0037682D /* UpdateService.swift */; };
 		1033172023870B2B0037682D /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1033171F23870B2B0037682D /* UserAction.swift */; };
 		10792DC52385A17C00EC278F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DC42385A17C00EC278F /* AppDelegate.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1004171A238BBD81007E429B /* DirectionCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionCalculator.swift; sourceTree = "<group>"; };
 		103317192386690D0037682D /* UpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateService.swift; sourceTree = "<group>"; };
 		1033171F23870B2B0037682D /* UserAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
 		10792DC12385A17C00EC278F /* FindingNemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindingNemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,6 +68,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		10041719238BBD63007E429B /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				1004171A238BBD81007E429B /* DirectionCalculator.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 		107902B723878F550007B777 /* UserAction */ = {
 			isa = PBXGroup;
 			children = (
@@ -148,6 +158,7 @@
 		10792DE42385C3DB00EC278F /* Operator */ = {
 			isa = PBXGroup;
 			children = (
+				10041719238BBD63007E429B /* Support */,
 				10792DE72385C65A00EC278F /* UserOperator.swift */,
 				10792DE52385C40B00EC278F /* Finder.swift */,
 				10792DE92385C6AC00EC278F /* Connecter.swift */,
@@ -313,6 +324,7 @@
 				10792DC92385A17C00EC278F /* ViewController.swift in Sources */,
 				10ACF229238645DC00518785 /* FetchService.swift in Sources */,
 				10792DEA2385C6AC00EC278F /* Connecter.swift in Sources */,
+				1004171B238BBD81007E429B /* DirectionCalculator.swift in Sources */,
 				10792DEE238635A400EC278F /* UserBuilder.swift in Sources */,
 				10792DC52385A17C00EC278F /* AppDelegate.swift in Sources */,
 				10792DE02385B79D00EC278F /* User.swift in Sources */,

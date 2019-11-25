@@ -7,11 +7,10 @@
 //
 
 import UIKit
-import FirebaseDatabase
-import GeoFire
-
+import CoreLocation
 class ViewController: UIViewController {
 
+    @IBOutlet weak var arrowImgView: UIImageView!
     @IBOutlet weak var lblInfo: UILabel!
     @IBOutlet weak var mainBtn: UIButton!
     
@@ -22,28 +21,48 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         lblInfo.text = "Welcome"
         mainBtn.setTitle("Start", for: .normal)
-        
+        setupUserAction()
+
+    }
+    
+
+    @IBAction func buttonPressed(_ sender: UIButton) {
+        guard let title = sender.title(for: .normal) else { return }
+        buttonAction(withTitle: title)
+    }
+}
+
+private extension ViewController {
+    func setupUserAction() {
         userAction.action = { [unowned self] (state) in
             DispatchQueue.main.async {
                 switch state {
-                case .finding(let isFinding):
-                    self.lblInfo.text = "\(isFinding ? "Updating " : "Stop updating") user location\nLatitude: \(String(describing: UserManager.shared.currentUser.localLatitude))\nLongtitude: \(String(describing: UserManager.shared.currentUser.localLongtitude))"
-                    self.mainBtn.setTitle(isFinding ? "Stop" : "Start", for: .normal)
+                case .finding:
+                    self.lblInfo.text = "Updating user location\nLatitude: \(String(describing: UserManager.shared.currentUser.localLatitude))\nLongtitude: \(String(describing: UserManager.shared.currentUser.localLongtitude))"
+                    self.mainBtn.setTitle("Stop", for: .normal)
                 case .didConnect:
                     if let uuid = UserManager.shared.currentUser.uuid {
                         self.lblInfo.text = "User did connect to \(uuid)"
                         self.mainBtn.setTitle("Disconnect", for: .normal)
                     }
+                case .direction(let angle):
+                    UIView.animate(withDuration: 0.5) {
+                        self.arrowImgView.transform = CGAffineTransform(rotationAngle: angle)
+                    }
                 case .didDisconnect:
                     self.lblInfo.text = "Start Again!!!"
                     self.mainBtn.setTitle("Start", for: .normal)
+                case .locationError(let error):
+                    self.lblInfo.text = "Stop updating user location:\n\(error.errorDescription ?? "")"
+                    self.mainBtn.setTitle("Start", for: .normal)
+                    self.arrowImgView.transform = CGAffineTransform.identity
                 }
             }
         }
     }
-
-    @IBAction func buttonPressed(_ sender: UIButton) {
-        switch sender.title(for: .normal) {
+    
+    func buttonAction(withTitle title: String) {
+        switch title {
         case "Start":
             userAction.startFinder()
         case "Stop":
@@ -55,4 +74,3 @@ class ViewController: UIViewController {
         }
     }
 }
-

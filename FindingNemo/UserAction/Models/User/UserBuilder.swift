@@ -12,7 +12,7 @@ import FirebaseDatabase
 
 private extension DataSnapshot {
     func subcrip(_ key: ParamKeys) -> Any? {
-        return self.childSnapshot(forPath: key.rawValue).value
+        return (self.value as? [String : AnyObject])?[key.rawValue]
     }
 }
 
