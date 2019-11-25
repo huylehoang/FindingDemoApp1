@@ -56,7 +56,6 @@ class UserManager {
             if exists {
                 self.builder = UserBuilder(with: snapshot)
                 FetchUserService().checkConnectedCurrentUser { (stillConnected) in
-                    print("HUY C 11")
                     if stillConnected {
                         UserDisconnecter().execute()
                     } else {
