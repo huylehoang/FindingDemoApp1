@@ -153,6 +153,12 @@ class UserDisconnecter: UserConnectOperator {
         if retryCounter != retryTime {
             updateDataBase()
             retryCounter += 1
+        } else {
+            reset()
         }
+    }
+    
+    func reset() {
+        retryCounter = 0
     }
 }

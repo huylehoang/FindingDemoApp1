@@ -91,6 +91,7 @@ private class UserActionHandler: UserActionProtocol {
             guard let disconnected = disconnected else { return }
             if disconnected {
                 print("Disconnected")
+                self.disconnecter.asDisconnecter.reset()
                 self.action?(.didDisconnect)
             } else {
                 print("Error while disconnecting")
