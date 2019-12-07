@@ -50,23 +50,23 @@ class UserManager {
     
     private func setup() {
         builder = UserBuilder.standard
-        FetchUserService().execute(fetchByUUID: builder.uuid) { (exists, snapshot) in
-            if exists {
-                self.builder = UserBuilder(with: snapshot)
-                FetchUserService().checkConnectedCurrentUser { (stillConnected) in
-                    if stillConnected {
-                        UserDisconnecter().execute()
-                    } else {
-                        if self.builder.connectedToUUID != nil {
-                            self.set(connectedToUUID: nil)
-                            UpdateUserService().execute(withValues: .connectedUUID(connected: false))
-                        } else if self.builder.isFinding {
-                            self.set(isFinding: false)
-                        }
-                    }
-                }
-            }
-        }
+//        FetchUserService().execute(fetchByUUID: builder.uuid) { (exists, snapshot) in
+//            if exists {
+//                self.builder = UserBuilder(with: snapshot)
+//                FetchUserService().checkConnectedCurrentUser { (stillConnected) in
+//                    if stillConnected {
+//                        UserDisconnecter().execute()
+//                    } else {
+//                        if self.builder.connectedToUUID != nil {
+//                            self.set(connectedToUUID: nil)
+//                            UpdateUserService().execute(withValues: .connectedUUID(connected: false))
+//                        } else if self.builder.isFinding {
+//                            self.set(isFinding: false)
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
     
     func set(location: CLLocationCoordinate2D) {
@@ -77,7 +77,7 @@ class UserManager {
     func set(isFinding: Bool) {
         guard builder.isFinding != isFinding else { return }
         builder.isFinding = isFinding
-        UpdateUserService().execute()
+//        UpdateUserService().execute()
     }
     
     func set(connectedToUUID: String?) {
@@ -87,10 +87,5 @@ class UserManager {
     
     func set(connectedLocation: CLLocation?) {
         self.connectedCLLLocation = connectedLocation
-    }
-    
-    func appWillTerminated() {
-        self.set(connectedToUUID: nil)
-        UpdateUserService().execute(withValues: .connectedUUID(connected: false))
     }
 }

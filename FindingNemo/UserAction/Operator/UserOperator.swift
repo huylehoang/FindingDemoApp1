@@ -8,14 +8,14 @@
 
 import Foundation
 
-protocol UserOperator {
-    typealias UserHandler = (Bool?, User?) -> Void
-    var handler: UserHandler? {get set}
-    func execute()
-}
-
-extension UserOperator{
-    var updateService: UpdateUserService {
-        return UpdateUserService()
-    }
-}
+//protocol UserOperator {
+//    typealias UserHandler = (Bool?, User?) -> Void
+//    var handler: UserHandler? {get set}
+//    func execute()
+//}
+//
+//extension UserOperator{
+//    var updateService: UpdateUserService {
+//        return UpdateUserService()
+//    }
+//}

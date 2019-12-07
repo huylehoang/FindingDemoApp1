@@ -18,13 +18,29 @@ protocol DirectionProtocol {
 class DirectionCalculator: DirectionProtocol {
     var calculatedAngle: DirectionAngleCallBack?
     
-    func execute() {
-        LocationManager.shared.startUpdatingHeading()
-        LocationManager.shared.currentHeading = { (heading) in
-            if let angle = self.computeNewAngle(with: CGFloat(heading)) {
-                self.calculatedAngle?(angle)
+//    func execute() {
+//        LocationManager.shared.startUpdatingHeading()
+//        LocationManager.shared.currentHeading = { (heading) in
+//            if let angle = self.computeNewAngle(with: CGFloat(heading)) {
+//                self.calculatedAngle?(angle)
+//            }
+//        }
+//    }
+    
+    func computeNewAngle(with newAngle: CGFloat, andConnectedLocation: CLLocation?) -> CGFloat? {
+        let heading: CGFloat? = {
+            guard let currentLocation = self.currentLocation
+                , let connectedLocation = andConnectedLocation
+                else { return nil }
+            print("heading 1 ")
+            let originalHeading = currentLocation.bearingToLocationRadian(connectedLocation) - newAngle.degreesToRadians
+            switch UIDevice.current.orientation {
+            case .faceDown: return -originalHeading
+            default: return originalHeading
             }
-        }
+        }()
+        guard let orientationAdjustment = self.orientationAdjustment(), heading != nil else { return nil }
+        return CGFloat(orientationAdjustment.degreesToRadians + heading!)
     }
 }
 
@@ -67,17 +83,7 @@ private extension DirectionCalculator {
         return nil
     }
     
-    func computeNewAngle(with newAngle: CGFloat) -> CGFloat? {
-        let heading: CGFloat = {
-            let originalHeading = self.latestLocationBearing - newAngle.degreesToRadians
-            switch UIDevice.current.orientation {
-            case .faceDown: return -originalHeading
-            default: return originalHeading
-            }
-        }()
-        guard let orientationAdjustment = self.orientationAdjustment() else { return nil }
-        return CGFloat(orientationAdjustment.degreesToRadians + heading)
-    }
+    
 }
 
 private extension CLLocation {

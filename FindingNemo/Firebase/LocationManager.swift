@@ -42,8 +42,9 @@ class LocationManager: NSObject {
     typealias HeadingCallBack = (CLLocationDirection) -> Void
     typealias ErrorCallback = (LocationError) -> Void
     var currentLocation: LocationCallBack?
-    var currentHeading: HeadingCallBack?
+//    var currentHeading: HeadingCallBack?
     var error: ErrorCallback?
+    var heading: CLLocationDirection?
     
     private var locationManager: CLLocationManager!
     private var isUpdatingLocation: Bool = false
@@ -131,7 +132,8 @@ extension LocationManager: CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        self.currentHeading?(newHeading.trueHeading)
+//        self.currentHeading?(newHeading.trueHeading)
+        self.heading = newHeading.trueHeading
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
