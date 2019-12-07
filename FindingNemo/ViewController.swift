@@ -42,7 +42,7 @@ private extension ViewController {
                     self.mainBtn.setTitle("Stop", for: .normal)
                 case .didConnect:
                     if let uuid = UserManager.shared.currentUser.uuid {
-                        self.lblInfo.text = "My \n\(String(describing: UserManager.shared.currentUser.localLatitude))\n \(String(describing: UserManager.shared.currentUser.localLongtitude))\n\nConnected\n\(String(describing: UserManager.shared.connectedCLLLocation?.coordinate.latitude))\n \(UserManager.shared.connectedCLLLocation?.coordinate.latitude)"
+                        self.lblInfo.text = "My \n\(UserManager.shared.currentUser.localLatitude)\n \(UserManager.shared.currentUser.localLongtitude)\n\nConnected\n\(UserManager.shared.connectedCLLLocation?.coordinate.latitude ?? 0)\n \(UserManager.shared.connectedCLLLocation?.coordinate.longitude ?? 0)"
                         self.mainBtn.setTitle("Disconnect", for: .normal)
                     }
                 case .direction(let angle):
@@ -59,6 +59,11 @@ private extension ViewController {
                 }
             }
         }
+    }
+    
+    func convertDouble(_ x: CLLocationDegrees) -> Double {
+      let y = Double(round(1000*x)/1000)
+      return y
     }
     
     func buttonAction(withTitle title: String) {

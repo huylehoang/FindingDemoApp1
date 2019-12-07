@@ -38,9 +38,7 @@ class UserManager {
 //    private var connectedLatitude: CLLocationDegrees?
 //    private var connectedLongtitude: CLLocationDegrees?
     
-    var connectedCLLLocation: CLLocation? {
-        return _connectedCLLLocation
-    }
+    var connectedCLLLocation: CLLocation?
     
     private var _connectedCLLLocation: CLLocation?
     
@@ -88,7 +86,7 @@ class UserManager {
     }
     
     func set(connectedLocation: CLLocation?) {
-        self._connectedCLLLocation = connectedLocation
+        self.connectedCLLLocation = connectedLocation
     }
     
     func appWillTerminated() {
