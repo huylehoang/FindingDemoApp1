@@ -75,7 +75,7 @@ class UserManager {
     }
     
     func set(isFinding: Bool) {
-        guard builder.isFinding != isFinding else { return }
+//        guard builder.isFinding != isFinding else { return }
         builder.isFinding = isFinding
 //        UpdateUserService().execute()
     }

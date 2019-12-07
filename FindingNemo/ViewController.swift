@@ -30,10 +30,13 @@ class ViewController: UIViewController {
         LocationManager.shared.startUpdatingLocation()
         LocationManager.shared.currentLocation = { (location) in
             UserManager.shared.set(location: location)
+            Firebase.shared.setLocation(lat: location.latitude, long: location.longitude)
+            
             Firebase.shared.startQueryNearbyUser { (connectedUser) in
                 UserManager.shared.set(connectedToUUID: connectedUser.uuid)
                 Firebase.shared.updateUser(connectedUser, withValues: .connectedUUID(connected: true))
                 Firebase.shared.getConnectedLocation { (location) in
+                    UserManager.shared.set(isFinding: false)
                     UserManager.shared.set(connectedLocation: location)
                     LocationManager.shared.startUpdatingHeading()
                     if let heading = LocationManager.shared.heading, let angle = self.directionCalculator.computeNewAngle(with: CGFloat(heading), andConnectedLocation: location) {
@@ -46,6 +49,7 @@ class ViewController: UIViewController {
             }
             if UserManager.shared.noConnedtedUUID {
                 UserManager.shared.set(isFinding: true)
+                
                 self.lblInfo.text = "Current user location\n\(UserManager.shared.currentCLLocation.coordinate.latitude)\n\(UserManager.shared.currentCLLocation.coordinate.longitude)"
                 Firebase.shared.updateUser(UserManager.shared.currentUser)
             }

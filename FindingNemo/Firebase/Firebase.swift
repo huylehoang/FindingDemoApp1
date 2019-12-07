@@ -36,8 +36,8 @@ private extension Double {
 class Firebase {
     static let shared = Firebase()
     
-    private var databaseRef: DatabaseReference = Database.database().reference().child("USERS")
-    private var currentUserRef: DatabaseReference =  Database.database().reference().child("USERS").child(UserManager.shared.currentUser.uuid)
+    private var databaseRef: DatabaseReference = Database.database().reference().child("Users")
+    private var currentUserRef: DatabaseReference =  Database.database().reference().child("Users").child(UserManager.shared.currentUser.uuid)
     
     private var geoFire: GeoFire!
     private var geoQuery: GFQuery?
