@@ -33,8 +33,10 @@ class ViewController: UIViewController {
             Firebase.shared.setLocation(lat: location.latitude, long: location.longitude)
             
             Firebase.shared.startQueryNearbyUser { (connectedUser) in
+                
                 UserManager.shared.set(connectedToUUID: connectedUser.uuid)
                 Firebase.shared.updateUser(connectedUser, withValues: .connectedUUID(connected: true))
+                
                 Firebase.shared.getConnectedLocation { (location) in
                     UserManager.shared.set(isFinding: false)
                     UserManager.shared.set(connectedLocation: location)
@@ -49,8 +51,8 @@ class ViewController: UIViewController {
             }
             if UserManager.shared.noConnedtedUUID {
                 UserManager.shared.set(isFinding: true)
-                
                 self.lblInfo.text = "Current user location\n\(UserManager.shared.currentCLLocation.coordinate.latitude)\n\(UserManager.shared.currentCLLocation.coordinate.longitude)"
+                self.mainBtn.setTitle("is finding", for: .normal)
                 Firebase.shared.updateUser(UserManager.shared.currentUser)
             }
         }

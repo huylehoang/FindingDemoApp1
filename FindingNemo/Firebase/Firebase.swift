@@ -83,9 +83,9 @@ class Firebase {
     }
     
     func getConnectedLocation(completion: @escaping (CLLocation)->()) {
-        guard UserManager.shared.readyForDirectionToConnectedUser else { return }
-        checkConnectedCurrentUser { (isConnected) in
-            if isConnected, let connectedUUId = UserManager.shared.currentUser.connectedToUUID {
+//        guard UserManager.shared.readyForDirectionToConnectedUser else { return }
+//        checkConnectedCurrentUser { (isConnected) in
+            if let connectedUUId = UserManager.shared.currentUser.connectedToUUID {
                 self.databaseRef.child(connectedUUId).observe(.childChanged) { (_) in
                     self.geoFire.getLocationForKey(connectedUUId) { (location, error) in
                         if location != nil {
@@ -99,16 +99,16 @@ class Firebase {
                     }
                 }
             }
-        }
+//        }
     }
     
     func startQueryNearbyUser(completion: @escaping (User) -> Void) {
-        guard UserManager.shared.needFetchNearByUser else { return }
+//        guard UserManager.shared.needFetchNearByUser else { return }
         geoQuery = geoFire.query(at: UserManager.shared.currentCLLocation, withRadius: radius.toKM)
         geoQuery?.observe(.keyEntered, with: { (key, _) in
             guard key != UserManager.shared.currentUser.uuid else { return }
             self.fetch(byUUID: key) { (user) in
-                if let user = user, user.isValidToConnect {
+                if let user = user {
                     completion(User(builder: UserBuilder(builderClosure: { (builder) in
                         builder.uuid = user.uuid
                         builder.isFinding = false
