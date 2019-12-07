@@ -35,16 +35,20 @@ class FetchNearbyUserService: FirService {
         guard UserManager.shared.readyForUpdatingLocation else { return }
         geoFire.setLocation(UserManager.shared.currentCLLocation, forKey: UserManager.shared.currentUser.uuid)
         startQueryNearbyUser(completion: completion)
-        getConnectedLocation()
+//        getConnectedLocation()
     }
     
-    private func getConnectedLocation() {
+    func getConnectedLocation() {
         guard UserManager.shared.readyForDirectionToConnectedUser else { return }
         FetchUserService().checkConnectedCurrentUser { (isConnected) in
             if isConnected, let connectedUUId = UserManager.shared.currentUser.connectedToUUID {
-                self.geoFire.getLocationForKey(connectedUUId) { (location, error) in
-                    if error == nil {
-                        UserManager.shared.set(connectedLocation: location)
+                self.databaseRef.child(connectedUUId).observe(.childChanged) { (_) in
+                    print("changed")
+                    self.geoFire.getLocationForKey(connectedUUId) { (location, error) in
+                        print("location \(location?.coordinate.latitude), \(location?.coordinate.longitude)")
+                        if error == nil {
+                            UserManager.shared.set(connectedLocation: location)
+                        }
                     }
                 }
             }

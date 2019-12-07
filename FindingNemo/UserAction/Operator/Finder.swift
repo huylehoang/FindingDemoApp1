@@ -25,6 +25,7 @@ class UserFinder: UserOperator, DirectionProtocol {
     }
     
     func startCalculateDirection() {
+        fetcher.getConnectedLocation()
         directionCalculator.calculatedAngle = { (angle) in
             self.calculatedAngle?(angle)
         }
