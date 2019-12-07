@@ -42,7 +42,7 @@ private extension ViewController {
                     self.mainBtn.setTitle("Stop", for: .normal)
                 case .didConnect:
                     if let uuid = UserManager.shared.currentUser.uuid {
-                        self.lblInfo.text = "User did connect to \(uuid)"
+                        self.lblInfo.text = "My \n\(String(describing: UserManager.shared.currentUser.localLatitude))\n \(String(describing: UserManager.shared.currentUser.localLongtitude))\n\nConnected\n\(String(describing: UserManager.shared.connectedCLLLocation?.coordinate.latitude))\n \(UserManager.shared.connectedCLLLocation?.coordinate.latitude)"
                         self.mainBtn.setTitle("Disconnect", for: .normal)
                     }
                 case .direction(let angle):

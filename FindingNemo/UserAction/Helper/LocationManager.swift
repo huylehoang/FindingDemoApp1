@@ -59,8 +59,8 @@ class LocationManager: NSObject {
     private func setup() {
         self.locationManager = CLLocationManager()
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        self.locationManager.distanceFilter = distanceFilter
-        self.locationManager.headingFilter = headingFilter
+//        self.locationManager.distanceFilter = distanceFilter
+//        self.locationManager.headingFilter = headingFilter
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.requestLocation()

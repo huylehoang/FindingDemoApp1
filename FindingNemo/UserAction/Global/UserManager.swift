@@ -35,8 +35,8 @@ class UserManager {
         return CLLocation(latitude: builder.localLatitude, longitude: builder.localLongtitude)
     }
     
-    private var connectedLatitude: CLLocationDegrees?
-    private var connectedLongtitude: CLLocationDegrees?
+//    private var connectedLatitude: CLLocationDegrees?
+//    private var connectedLongtitude: CLLocationDegrees?
     
     var connectedCLLLocation: CLLocation? {
         return _connectedCLLLocation
