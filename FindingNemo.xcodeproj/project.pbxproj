@@ -90,7 +90,6 @@
 				10792DDE2385B78B00EC278F /* Models */,
 				10041719238BBD63007E429B /* Support */,
 				10792DE12385BEEE00EC278F /* Global */,
-				10792DDB2385A60200EC278F /* Helper */,
 				10792DDA2385A30400EC278F /* SupportingFiles */,
 				10792DC42385A17C00EC278F /* AppDelegate.swift */,
 				10792DC62385A17C00EC278F /* SceneDelegate.swift */,
@@ -109,13 +108,6 @@
 				10792DCF2385A17E00EC278F /* LaunchScreen.storyboard */,
 			);
 			path = SupportingFiles;
-			sourceTree = "<group>";
-		};
-		10792DDB2385A60200EC278F /* Helper */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Helper;
 			sourceTree = "<group>";
 		};
 		10792DDE2385B78B00EC278F /* Models */ = {
