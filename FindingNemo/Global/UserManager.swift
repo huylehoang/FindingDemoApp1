@@ -28,19 +28,14 @@ class UserManager {
     }
     
     var readyForDirectionToConnectedUser: Bool {
-        return !needFetchNearByUser && readyForUpdatingLocation
+        return !needFetchNearByUser
     }
     
     var currentCLLocation: CLLocation {
         return CLLocation(latitude: builder.localLatitude, longitude: builder.localLongtitude)
     }
     
-//    private var connectedLatitude: CLLocationDegrees?
-//    private var connectedLongtitude: CLLocationDegrees?
-    
     var connectedCLLLocation: CLLocation?
-    
-    private var _connectedCLLLocation: CLLocation?
     
     private var builder: UserBuilder!
 
@@ -50,39 +45,27 @@ class UserManager {
     
     private func setup() {
         builder = UserBuilder.standard
-//        FetchUserService().execute(fetchByUUID: builder.uuid) { (exists, snapshot) in
-//            if exists {
-//                self.builder = UserBuilder(with: snapshot)
-//                FetchUserService().checkConnectedCurrentUser { (stillConnected) in
-//                    if stillConnected {
-//                        UserDisconnecter().execute()
-//                    } else {
-//                        if self.builder.connectedToUUID != nil {
-//                            self.set(connectedToUUID: nil)
-//                            UpdateUserService().execute(withValues: .connectedUUID(connected: false))
-//                        } else if self.builder.isFinding {
-//                            self.set(isFinding: false)
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
     
     func set(location: CLLocationCoordinate2D) {
         builder.localLatitude = location.latitude
         builder.localLongtitude = location.longitude
+        Firebase.shared.setLocation(lat: location.latitude, long: location.longitude)
     }
     
     func set(isFinding: Bool) {
-//        guard builder.isFinding != isFinding else { return }
+        guard builder.isFinding != isFinding else { return }
         builder.isFinding = isFinding
-//        UpdateUserService().execute()
+        Firebase.shared.updateUser()
     }
     
-    func set(connectedToUUID: String?) {
+    func set(connectedToUUID: String?, inObserver: Bool = false, completion: (() -> Void)? = nil) {
         builder.isFinding = false
         builder.connectedToUUID = connectedToUUID
+        guard !inObserver else { return }
+        Firebase.shared.updateUser(withValues: .connectedUUID(connected: connectedToUUID != nil)) {
+            completion?()
+        }
     }
     
     func set(connectedLocation: CLLocation?) {

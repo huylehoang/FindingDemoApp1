@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import UIKit
 
 enum LocationError: LocalizedError {
     case serviceNotFound
@@ -39,12 +40,12 @@ class LocationManager: NSObject {
     static let shared = LocationManager()
     
     typealias LocationCallBack = (CLLocationCoordinate2D) -> Void
-    typealias HeadingCallBack = (CLLocationDirection) -> Void
+    typealias HeadingCallBack = () -> Void
     typealias ErrorCallback = (LocationError) -> Void
     var currentLocation: LocationCallBack?
-//    var currentHeading: HeadingCallBack?
     var error: ErrorCallback?
     var heading: CLLocationDirection?
+    var newHeading: HeadingCallBack?
     
     private var locationManager: CLLocationManager!
     private var isUpdatingLocation: Bool = false
@@ -52,7 +53,7 @@ class LocationManager: NSObject {
     private var distanceFilter: CLLocationDistance = 2.5
     private var headingFilter: CLLocationDegrees = 5
     
-    override init() {
+    private override init() {
         super.init()
         setup()
     }
@@ -71,12 +72,14 @@ class LocationManager: NSObject {
     
     func startUpdatingLocation() {
         guard !isUpdatingLocation else { return }
+        print("start updating location")
         self.locationManager.startUpdatingLocation()
         isUpdatingLocation = true
     }
     
     func stopUpdatingLocation(bySpecific error: LocationError? = nil) {
         guard isUpdatingLocation else { return }
+        print("stop updating location")
         self.locationManager.stopUpdatingLocation()
         self.stopUpdatingHeading()
         isUpdatingLocation = false
@@ -89,12 +92,14 @@ class LocationManager: NSObject {
     
     func startUpdatingHeading() {
         guard !isUpdatingHeading else { return }
+        print("start updating heading")
         self.locationManager.startUpdatingHeading()
         isUpdatingHeading = true
     }
     
     private func stopUpdatingHeading() {
         guard isUpdatingHeading else { return }
+        print("stop updating heading")
         self.locationManager.stopUpdatingHeading()
         isUpdatingHeading = false
     }
@@ -112,13 +117,11 @@ extension LocationManager: CLLocationManagerDelegate {
             return
         }
         switch status {
-        case .authorizedAlways:
-            self.startUpdatingLocation()
         case .authorizedWhenInUse, .denied, .restricted:
             self.error?(.accessDenied)
         case .notDetermined:
             self.locationManager.requestAlwaysAuthorization()
-        @unknown default:
+        default:
             return
         }
     }
@@ -128,12 +131,16 @@ extension LocationManager: CLLocationManagerDelegate {
             self.error?(.invalidLocation)
             return
         }
+        guard isUpdatingLocation else { return }
         self.currentLocation?(location.coordinate)
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-//        self.currentHeading?(newHeading.trueHeading)
-        self.heading = newHeading.trueHeading
+        guard isUpdatingHeading else { return }
+//        self.heading = -1.0 * .pi * newHeading.magneticHeading / 180.0
+        self.heading = -1.0 * newHeading.magneticHeading
+        self.newHeading?()
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

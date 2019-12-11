@@ -37,17 +37,18 @@ class Firebase {
     static let shared = Firebase()
     
     private var databaseRef: DatabaseReference = Database.database().reference().child("Users")
-    private var currentUserRef: DatabaseReference =  Database.database().reference().child("Users").child(UserManager.shared.currentUser.uuid)
+    private var currentUserRef: DatabaseReference!
     
     private var geoFire: GeoFire!
     private var geoQuery: GFQuery?
-    private var radius: Double = 5 // meters
+    private var radius: Double = 100 // meters
     
     private init() {
         geoFire = GeoFire(firebaseRef: databaseRef)
+        currentUserRef = databaseRef.child(UserManager.shared.currentUser.uuid)
     }
     
-    func checkConnectedCurrentUser(completion: @escaping (Bool) -> Void) {
+    private func checkConnectedCurrentUser(completion: @escaping (Bool) -> Void) {
         fetch(byUUID: UserManager.shared.currentUser.uuid) { (user) in
             if let user = user,
                 let connectedUUID = user.connectedToUUID,
@@ -78,37 +79,41 @@ class Firebase {
         databaseRef.child(uuid).observeSingleEvent(of: .value) { (snapshot) in
             if snapshot.exists() {
                 completion(User(builder: UserBuilder(with: snapshot)))
+            } else {
+                completion(nil)
+            }
+        }
+    }
+    
+    func observeConnectedLocation(completion: @escaping (CLLocation)->()) {
+        guard UserManager.shared.readyForDirectionToConnectedUser
+            , let connectedUUID = UserManager.shared.currentUser.connectedToUUID
+            else { return }
+        self.databaseRef.child(connectedUUID).observe(.childChanged) { (_) in
+            self.getConnectedLocation { (location) in
+                completion(location)
             }
         }
     }
     
     func getConnectedLocation(completion: @escaping (CLLocation)->()) {
-//        guard UserManager.shared.readyForDirectionToConnectedUser else { return }
-//        checkConnectedCurrentUser { (isConnected) in
-            if let connectedUUId = UserManager.shared.currentUser.connectedToUUID {
-                self.databaseRef.child(connectedUUId).observe(.childChanged) { (_) in
-                    self.geoFire.getLocationForKey(connectedUUId) { (location, error) in
-                        if location != nil {
-//                            UserManager.shared.set(connectedLocation: location)
-//                            LocationManager.shared.startUpdatingHeading()
-//                            if let heading = LocationManager.shared.heading, let angle = self.directionCalculator.computeNewAngle(with: CGFloat(heading), andConnectedLocation: location) {
-//                                completion(angle)
-//                            }
-                            completion(location!)
-                        }
-                    }
-                }
+        guard let connectedUUID = UserManager.shared.currentUser.connectedToUUID
+            else { return }
+        self.geoFire.getLocationForKey(connectedUUID) { (location, error) in
+            if location != nil {
+                UserManager.shared.set(connectedLocation: location)
+                completion(location!)
             }
-//        }
+        }
     }
     
     func startQueryNearbyUser(completion: @escaping (User) -> Void) {
-//        guard UserManager.shared.needFetchNearByUser else { return }
+        guard UserManager.shared.needFetchNearByUser else { return }
         geoQuery = geoFire.query(at: UserManager.shared.currentCLLocation, withRadius: radius.toKM)
         geoQuery?.observe(.keyEntered, with: { (key, _) in
             guard key != UserManager.shared.currentUser.uuid else { return }
             self.fetch(byUUID: key) { (user) in
-                if let user = user {
+                if let user = user, user.isValidToConnect {
                     completion(User(builder: UserBuilder(builderClosure: { (builder) in
                         builder.uuid = user.uuid
                         builder.isFinding = false
@@ -119,38 +124,49 @@ class Firebase {
         })
     }
     
-    func addUser(_ user: User, withValues values: NeedUpdateValues = .basic) {
+    func addUser(_ user: User, withValues values: NeedUpdateValues = .basic, completion: (() -> Void)? = nil) {
         databaseRef.child(user.uuid).setValue(values.info(of: user)) {(error, _) in
             if let error = error {
                 print("Error while adding user: \(error.localizedDescription)")
             } else {
                 print("Success adding \(String(describing: user.uuid))")
+                completion?()
             }
+            
         }
     }
     
-    func updateUser(_ user: User, withValues values: NeedUpdateValues = .basic) {
+    func updateUser(_ user: User = UserManager.shared.currentUser,
+                    withValues values: NeedUpdateValues = .basic,
+                    completion: (() -> Void)? = nil)
+    {
         fetch(byUUID: user.uuid) { (tmpUser) in
-            if let user = tmpUser {
+            if let _ = tmpUser {
                 self.databaseRef.child(user.uuid).updateChildValues(values.info(of: user)) { (error, _) in
                     if let error = error {
                         print("Error while updating user: \(error.localizedDescription)")
                     } else {
                         print("Success updating \(String(describing: user.uuid))")
-                        self.removeConnectedIfNeeded(of: user, checkBy: values)
+                        self.removeConnectedIfNeeded(of: user, checkBy: values) {
+                            completion?()
+                        }
                     }
                 }
             } else {
-                self.addUser(user, withValues: values)
+                self.addUser(user, withValues: values) {
+                    completion?()
+                }
             }
         }
     }
     
-    func removeConnectedIfNeeded(of user: User, checkBy values: NeedUpdateValues)
+    private func removeConnectedIfNeeded(of user: User,
+                                         checkBy values: NeedUpdateValues,
+                                         completion: (() -> Void)? = nil)
     {
         switch values {
-        case.basic:
-            break
+        case .basic:
+            completion?()
         case .connectedUUID(let connected):
             if !connected {
                 self.databaseRef.child(user.uuid).child(ParamKeys.connectedToUUID.rawValue).removeValue { (error, _) in
@@ -158,8 +174,11 @@ class Firebase {
                         print("Remove connected uuid error \(error.localizedDescription)")
                     } else {
                         print("Success removing connected uuid")
+                        completion?()
                     }
                 }
+            } else {
+                completion?()
             }
         }
         
