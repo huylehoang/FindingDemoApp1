@@ -41,35 +41,35 @@ class Firebase {
     
     private var geoFire: GeoFire!
     private var geoQuery: GFQuery?
-    private var radius: Double = 100 // meters
+    private var radius: Double = 5 // meters
     
     private init() {
         geoFire = GeoFire(firebaseRef: databaseRef)
         currentUserRef = databaseRef.child(UserManager.shared.currentUser.uuid)
     }
     
-    private func checkConnectedCurrentUser(completion: @escaping (Bool) -> Void) {
-        fetch(byUUID: UserManager.shared.currentUser.uuid) { (user) in
-            if let user = user,
-                let connectedUUID = user.connectedToUUID,
-                user.isFinding == false
-            {
-                self.fetch(byUUID: connectedUUID) { (connectedUser) in
-                    if let connectedUser = connectedUser,
-                        let connectedUuidOfConnected = connectedUser.connectedToUUID,
-                        connectedUser.isFinding == false,
-                        connectedUuidOfConnected == UserManager.shared.currentUser.uuid
-                    {
-                        completion(true)
-                    } else {
-                        completion(false)
-                    }
-                }
-            } else {
-                completion(false)
-            }
-        }
-    }
+//    private func checkConnectedCurrentUser(completion: @escaping (Bool) -> Void) {
+//        fetch(byUUID: UserManager.shared.currentUser.uuid) { (user) in
+//            if let user = user,
+//                let connectedUUID = user.connectedToUUID,
+//                user.isFinding == false
+//            {
+//                self.fetch(byUUID: connectedUUID) { (connectedUser) in
+//                    if let connectedUser = connectedUser,
+//                        let connectedUuidOfConnected = connectedUser.connectedToUUID,
+//                        connectedUser.isFinding == false,
+//                        connectedUuidOfConnected == UserManager.shared.currentUser.uuid
+//                    {
+//                        completion(true)
+//                    } else {
+//                        completion(false)
+//                    }
+//                }
+//            } else {
+//                completion(false)
+//            }
+//        }
+//    }
     
     func setLocation(lat: CLLocationDegrees, long: CLLocationDegrees) {
          geoFire.setLocation(CLLocation(latitude: lat, longitude: long), forKey: UserManager.shared.currentUser.uuid)
