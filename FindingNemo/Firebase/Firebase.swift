@@ -105,18 +105,6 @@ class Firebase {
         })
     }
     
-//    func addUser(_ user: User, withValues values: NeedUpdateValues = .basic, completion: (() -> Void)? = nil) {
-//        databaseRef.child(user.uuid).setValue(values.info(of: user)) {(error, _) in
-//            if let error = error {
-//                print("Error while adding user: \(error.localizedDescription)")
-//            } else {
-//                print("Success adding \(String(describing: user.uuid))")
-//                completion?()
-//            }
-//
-//        }
-//    }
-    
     func updateUser(_ user: User = UserManager.shared.currentUser,
                     withValues values: NeedUpdateValues = .basic,
                     completion: (() -> Void)? = nil)

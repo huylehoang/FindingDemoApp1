@@ -50,8 +50,6 @@ class LocationManager: NSObject {
     private var locationManager: CLLocationManager!
     private var isUpdatingLocation: Bool = false
     private var isUpdatingHeading: Bool = false
-//    private var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
-//    private var headingFilter: CLLocationDegrees = kCLHeadingFilterNone
     
     private override init() {
         super.init()
@@ -61,11 +59,8 @@ class LocationManager: NSObject {
     private func setup() {
         self.locationManager = CLLocationManager()
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-//        self.locationManager.distanceFilter = distanceFilter
-//        self.locationManager.headingFilter = headingFilter
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
-//        self.locationManager.requestLocation()
         self.locationManager.allowsBackgroundLocationUpdates = true
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }

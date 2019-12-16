@@ -50,34 +50,9 @@ private extension Direction {
             else { return nil }
         return currentLocation.bearingToLocationRadian(connectedLocation)
     }
-    
-//    func orientationAdjustment() -> CGFloat {
-//        let isFaceDown: Bool = {
-//            switch UIDevice.current.orientation {
-//            case .faceDown: return true
-//            default: return false
-//            }
-//        }()
-//
-//        if let interfaceOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation {
-//            let adjAngle: CGFloat = {
-//                switch interfaceOrientation {
-//                case .landscapeLeft:  return 90
-//                case .landscapeRight: return -90
-//                case .portrait, .unknown: return 0
-//                case .portraitUpsideDown: return isFaceDown ? 180 : -180
-//                @unknown default: return 0
-//                }
-//            }()
-//            return adjAngle
-//        }
-//        return 0
-//    }
-    
-    
 }
 
- extension CLLocation {
+private extension CLLocation {
     func bearingToLocationRadian(_ destinationLocation: CLLocation) -> CGFloat {
         
         let lat1 = self.coordinate.latitude.degreesToRadians
@@ -100,7 +75,7 @@ private extension Direction {
     }
 }
 
- extension CGFloat {
+private extension CGFloat {
     var degreesToRadians: CGFloat { return self * .pi / 180 }
     var radiansToDegrees: CGFloat { return self * 180 / .pi }
 }
