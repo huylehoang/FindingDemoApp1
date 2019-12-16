@@ -26,14 +26,14 @@ struct User: UserProtocol {
         self.isValidToConnect = builder.isValidToConnect
     }
     
-    var basicInfo: [String: AnyObject] {
-        return [ParamKeys.isFinding.rawValue: isFinding as AnyObject]
+    var basicInfo: [String: Any] {
+        return [ParamKeys.isFinding.rawValue: isFinding!]
     }
     
-    var infoWithConnectedUUID: [String: AnyObject] {
+    var infoWithConnectedUUID: [String: Any] {
         var basicInfo = self.basicInfo
         if let connectedUUID = self.connectedToUUID {
-            basicInfo[ParamKeys.connectedToUUID.rawValue] = connectedUUID as AnyObject
+            basicInfo[ParamKeys.connectedToUUID.rawValue] = connectedUUID
         }
         return basicInfo
     }

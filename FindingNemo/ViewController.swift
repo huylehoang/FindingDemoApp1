@@ -54,7 +54,7 @@ private extension ViewController {
             }
 
             // Update isFinding = true if no connected user
-            if UserManager.shared.noConnedtedUUID {
+            if UserManager.shared.noConnedtedUUID && UserManager.shared.readyForUpdatingLocation {
                 UserManager.shared.set(isFinding: true)
                 self.lblInfo.text = "Current user location\n\(UserManager.shared.currentCLLocation.coordinate.latitude)\n\(UserManager.shared.currentCLLocation.coordinate.longitude)"
             }
@@ -81,23 +81,18 @@ private extension ViewController {
             self.lblInfo.text = error.errorDescription
             self.mainBtn.setTitle("Start", for: .normal)
         }
-
-        // Detect when another user connected to current user
-        Firebase.shared.userConnectedObserver { (connectedUUID) in
-            guard let connectedUUID = connectedUUID
-                , connectedUUID != UserManager.shared.currentUser.uuid
-                else { return }
-            UserManager.shared.set(connectedToUUID: connectedUUID, inObserver: true)
-            self.mainBtn.setTitle("Disconnect", for: .normal)
-            LocationManager.shared.startUpdatingHeading()
-        }
-
-        // Detect when connected user disconnect from current user
-        Firebase.shared.userDisconnectedObserver { (connectedUUID) in
-            guard let _ = connectedUUID else { return }
-            UserManager.shared.set(connectedToUUID: nil, inObserver: true)
-            self.arrowImgView.transform = CGAffineTransform.identity
-            LocationManager.shared.stopUpdatingLocation(bySpecific: LocationError.turnOffByDisconnectFromOtherUser)
+        
+        // Detect when another user connected/disconnected to current user
+        Firebase.shared.userConnectionObserver { (connectedUUID) in
+            if let connectedUUID = connectedUUID {
+                UserManager.shared.set(connectedToUUID: connectedUUID, inObserver: true)
+                self.mainBtn.setTitle("Disconnect", for: .normal)
+                LocationManager.shared.startUpdatingHeading()
+            } else {
+                UserManager.shared.set(connectedToUUID: nil, inObserver: true)
+                self.arrowImgView.transform = CGAffineTransform.identity
+                LocationManager.shared.stopUpdatingLocation(bySpecific: LocationError.turnOffByDisconnectFromOtherUser)
+            }
         }
     }
     

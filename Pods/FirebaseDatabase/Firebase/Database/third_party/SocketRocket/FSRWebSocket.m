@@ -18,7 +18,7 @@
 
 #import "FSRWebSocket.h"
 
-#if __has_include(<unicode/utf8.h>)
+#if TARGET_OS_IOS || TARGET_OS_TV
 #define HAS_ICU
 #endif
 
@@ -28,9 +28,9 @@
 #import <unicode/utf8.h>
 #endif
 
-#if __has_include(<Endian.h>)
+#if TARGET_OS_IOS || TARGET_OS_TV
 #import <Endian.h>
-#else
+#elif TARGET_OS_OSX
 #import <CoreServices/CoreServices.h>
 #endif
 
@@ -1354,11 +1354,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 {
     [self assertOnWorkQueue];
 
-    if (data == nil) {
-        return;
-    }
-
-    NSAssert([data isKindOfClass:[NSData class]] || [data isKindOfClass:[NSString class]], @"Function expects nil, NSString or NSData");
+    NSAssert(data == nil || [data isKindOfClass:[NSData class]] || [data isKindOfClass:[NSString class]], @"Function expects nil, NSString or NSData");
 
     size_t payloadLength = [data isKindOfClass:[NSString class]] ? [(NSString *)data lengthOfBytesUsingEncoding:NSUTF8StringEncoding] : [data length];
 
@@ -1510,9 +1506,7 @@ static const size_t SRFrameHeaderOverhead = 32;
         }
 
         case NSStreamEventErrorOccurred: {
-            // Note: The upstream code for SocketRocket logs the error message, but this causes
-            // crashes on iOS 13 (https://github.com/firebase/firebase-ios-sdk/issues/3950)
-            SRFastLog(@"NSStreamEventErrorOccurred %@", aStream);
+            SRFastLog(@"NSStreamEventErrorOccurred %@ %@", aStream, [[aStream streamError] copy]);
             /// TODO specify error better!
                     [self _failWithError:aStream.streamError];
             _readBufferOffset = 0;

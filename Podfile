@@ -7,8 +7,7 @@ target 'FindingNemo' do
 
   # Pods for FindingNemo
   pod 'Firebase/Core'
-  pod 'Firebase/Analytics'
-  pod 'Firebase/Database'
-  pod 'GeoFire', :git => 'https://github.com/firebase/geofire-objc.git'
+  pod 'Firebase/Firestore'
+  pod 'Geofirestore'
 
 end

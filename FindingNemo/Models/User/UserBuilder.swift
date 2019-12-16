@@ -8,11 +8,11 @@
 
 import Foundation
 import CoreLocation
-import FirebaseDatabase
+import FirebaseFirestore
 
-private extension DataSnapshot {
+extension DocumentSnapshot {
     func subcrip(_ key: ParamKeys) -> Any? {
-        return (self.value as? [String : AnyObject])?[key.rawValue]
+        return self.get(key.rawValue)
     }
 }
 
@@ -41,7 +41,7 @@ protocol UserProtocol {
 
 extension UserProtocol {
     var readyForUpdatingLocation: Bool {
-        return (localLatitude != nil || localLatitude.isValid) && (localLongtitude != nil || localLongtitude.isValid)
+        return localLatitude != nil && localLatitude.isValid && localLongtitude != nil && localLongtitude.isValid
     }
 }
 
@@ -55,9 +55,9 @@ class UserBuilder: UserProtocol {
     
     typealias BuilderClosure = (UserBuilder) -> ()
     
-    init(with snapshot: DataSnapshot? = nil, builderClosure: BuilderClosure? = nil) {
+    init(with snapshot: DocumentSnapshot? = nil, builderClosure: BuilderClosure? = nil) {
         if let snapshot = snapshot {
-            self.uuid = snapshot.key
+            self.uuid = snapshot.documentID
             self.isFinding = snapshot.subcrip(.isFinding) as? Bool ?? false
             self.connectedToUUID = snapshot.subcrip(.connectedToUUID) as? String
             self.isValidToConnect = isFinding && connectedToUUID == nil
