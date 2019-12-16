@@ -13,7 +13,6 @@ import UIKit
 enum LocationError: LocalizedError {
     case serviceNotFound
     case accessDenied
-    case invalidLocation
     case turnOff
     case turnOffByDisconnectFromOtherUser
     case other(Error)
@@ -24,8 +23,6 @@ enum LocationError: LocalizedError {
             return "Location services are not enabled"
         case .accessDenied:
             return "Location Access (Always) denied"
-        case.invalidLocation:
-            return "Cannot get the user location"
         case .turnOff:
             return "Turn off updating location"
         case .turnOffByDisconnectFromOtherUser:
@@ -122,11 +119,8 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard isUpdatingLocation, let location = locations.last else {
-            self.error?(.invalidLocation)
-            return
-        }
-        guard valid(location) else { return }
+        guard isUpdatingLocation, let location = locations.last, valid(location)
+            else { return }
         self.currentLocation?(location.coordinate)
     }
 

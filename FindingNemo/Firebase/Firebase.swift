@@ -44,11 +44,19 @@ class Firebase {
     
     private var geoFire: GeoFirestore!
     private var geoQuery: GFSCircleQuery?
+    private var connectedUserListener: ListenerRegistration?
     private var radius: Double = 5 // meters
     
     private init() {
         geoFire = GeoFirestore(collectionRef: ref)
         currentUserRef = ref.document(UserManager.shared.currentUser.uuid)
+    }
+    
+    func resetListener() {
+        if connectedUserListener != nil {
+            connectedUserListener?.remove()
+            connectedUserListener = nil
+        }
     }
     
     func setLocation(lat: CLLocationDegrees, long: CLLocationDegrees) {
@@ -69,7 +77,7 @@ class Firebase {
         guard UserManager.shared.readyForDirectionToConnectedUser
             , let connectedUUID = UserManager.shared.currentUser.connectedToUUID
             else { return }
-        self.ref.document(connectedUUID).addSnapshotListener { (_, error) in
+        connectedUserListener = self.ref.document(connectedUUID).addSnapshotListener { (_, error) in
             if error == nil {
                 self.getConnectedLocation { (location) in
                     completion(location)

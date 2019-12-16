@@ -67,17 +67,12 @@ private extension ViewController {
                 UserManager.shared.set(connectedLocation: location)
                 self.rotate()
             }
-            
-            // Also detect when connected user update new location. Observer is added here because current user is connected by another user, not by fetching near by user (startQueryNearbyUser)
-            Firebase.shared.observeConnectedLocation { (location) in
-                UserManager.shared.set(connectedLocation: location)
-                self.rotate()
-            }
         }
 
         // Error of why location manager not working or stop updating location/heading
         LocationManager.shared.error = { (error) in
             UserManager.shared.set(isFinding: false)
+            Firebase.shared.resetListener()
             self.lblInfo.text = error.errorDescription
             self.mainBtn.setTitle("Start", for: .normal)
         }
@@ -86,8 +81,14 @@ private extension ViewController {
         Firebase.shared.userConnectionObserver { (connectedUUID) in
             if let connectedUUID = connectedUUID {
                 UserManager.shared.set(connectedToUUID: connectedUUID, inObserver: true)
+                self.lblInfo.text = "Getting connected location"
                 self.mainBtn.setTitle("Disconnect", for: .normal)
                 LocationManager.shared.startUpdatingHeading()
+                // Detect when connected user update new location. Observer is added here because current user is connected by another user, not by fetching near by user (startQueryNearbyUser)
+                Firebase.shared.observeConnectedLocation { (location) in
+                    UserManager.shared.set(connectedLocation: location)
+                    self.rotate()
+                }
             } else {
                 UserManager.shared.set(connectedToUUID: nil, inObserver: true)
                 self.arrowImgView.transform = CGAffineTransform.identity
