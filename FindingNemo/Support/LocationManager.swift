@@ -50,8 +50,8 @@ class LocationManager: NSObject {
     private var locationManager: CLLocationManager!
     private var isUpdatingLocation: Bool = false
     private var isUpdatingHeading: Bool = false
-    private var distanceFilter: CLLocationDistance = 2.5
-    private var headingFilter: CLLocationDegrees = 5
+//    private var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
+//    private var headingFilter: CLLocationDegrees = kCLHeadingFilterNone
     
     private override init() {
         super.init()
@@ -65,7 +65,7 @@ class LocationManager: NSObject {
 //        self.locationManager.headingFilter = headingFilter
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
-        self.locationManager.requestLocation()
+//        self.locationManager.requestLocation()
         self.locationManager.allowsBackgroundLocationUpdates = true
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }
@@ -127,23 +127,69 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else {
+        guard isUpdatingLocation, let location = locations.last else {
             self.error?(.invalidLocation)
             return
         }
-        guard isUpdatingLocation else { return }
+        guard valid(location) else { return }
         self.currentLocation?(location.coordinate)
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        guard isUpdatingHeading else { return }
-//        self.heading = -1.0 * .pi * newHeading.magneticHeading / 180.0
-        self.heading = -1.0 * newHeading.magneticHeading
+        guard isUpdatingHeading, valid(newHeading) else { return }
+        self.heading = -1.0 * (newHeading.trueHeading > 0 ? newHeading.trueHeading : newHeading.magneticHeading)
         self.newHeading?()
-        
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.error?(.other(error))
+    }
+}
+
+private extension LocationManager {
+    func isNewLocation(checkBy locationDate: Date) -> Bool {
+        guard let diffSeconds = Calendar.current.dateComponents([.second]
+            , from: locationDate
+            , to: Date()).second
+            , diffSeconds == 0 else
+        {
+            return false
+        }
+        return true
+    }
+    
+    func valid(_ location: CLLocation) -> Bool {
+        guard isNewLocation(checkBy: location.timestamp) else {
+            print("Location is old")
+            return false
+        }
+        
+        guard location.horizontalAccuracy > 0 else {
+            print("Latitidue and longitude values are invalid.")
+            return false
+        }
+        
+        guard location.horizontalAccuracy < 100 && location.verticalAccuracy < 50 else {
+            print("Accuracy is too low. ")
+            print("Horizontal accuracy \(location.horizontalAccuracy)")
+            print("Vertical Accuracy \(location.verticalAccuracy)\n")
+            return false
+        }
+        
+        return true
+    }
+    
+    func valid(_ heading: CLHeading) -> Bool {
+        guard isNewLocation(checkBy: heading.timestamp) else {
+            print("Heading is old")
+            return false
+        }
+        
+        guard heading.headingAccuracy > 0 else {
+            print("Heading is not accurate \(heading.headingAccuracy)")
+            return false
+        }
+        
+        return true
     }
 }

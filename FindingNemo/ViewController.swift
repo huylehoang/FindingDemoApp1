@@ -19,7 +19,16 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         lblInfo.text = "Welcome"
         mainBtn.setTitle("Start", for: .normal)
-        
+        setup()
+    }
+
+    @IBAction func buttonPressed(_ sender: UIButton) {
+        pressed(sender)
+    }
+}
+
+private extension ViewController {
+    func setup() {
         LocationManager.shared.currentLocation = { (location) in
             UserManager.shared.set(location: location)
 
@@ -92,15 +101,15 @@ class ViewController: UIViewController {
         }
     }
     
-    private func rotate() {
+    func rotate() {
         self.lblInfo.text = "Direct to location\n\(UserManager.shared.connectedCLLLocation?.coordinate.latitude ?? 0.0)\n\(UserManager.shared.connectedCLLLocation?.coordinate.longitude ?? 0.0)"
         UIView.animate(withDuration: 0.3) {
-            self.arrowImgView.transform = CGAffineTransform(rotationAngle: Direction.shared.computeNewAngle())
+            self.arrowImgView.transform = CGAffineTransform(rotationAngle: Direction.shared.angle)
         }
     }
-
-    @IBAction func buttonPressed(_ sender: UIButton) {
-        switch sender.title(for: .normal) {
+    
+    func pressed(_ button: UIButton) {
+        switch button.title(for: .normal) {
         case "Start":
             LocationManager.shared.startUpdatingLocation()
             self.lblInfo.text = "Updating current location"

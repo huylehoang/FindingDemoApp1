@@ -13,22 +13,23 @@ class Direction {
     
     static let shared = Direction()
     
+    var angle: CGFloat {
+        return computeNewAngle()
+    }
+    
     private init() {}
     
-    func computeNewAngle() -> CGFloat {
+    private func computeNewAngle() -> CGFloat {
         let heading: CGFloat = {
-//            let originalHeading = CGFloat(-1.0 * .pi * currentLocation.bearingToLocationRadian(connectedLocation) / 180.0)
             guard let newHeading = LocationManager.shared.heading
                 , let latestLocationBearing = latestLocationBearing
                 else { return 0.0 }
-            let originalHeading = latestLocationBearing + CGFloat(newHeading)
+            let originalHeading = latestLocationBearing + CGFloat(newHeading).degreesToRadians
             switch UIDevice.current.orientation {
-            case .faceDown: return -originalHeading.degreesToRadians // seem like can't detect when device is face down, need test more
-            default: return originalHeading.degreesToRadians
+            case .faceDown: return -originalHeading//  seem like can't detect when device is face down, need test more
+            default: return originalHeading
             }
         }()
-        // Temporary remove orientation adjustment since we only use portrait mode
-//        return CGFloat(orientationAdjustment().degreesToRadians + heading)
         return heading
     }
 }
@@ -76,26 +77,22 @@ private extension Direction {
     
 }
 
-private extension CLLocation {
+ extension CLLocation {
     func bearingToLocationRadian(_ destinationLocation: CLLocation) -> CGFloat {
         
         let lat1 = self.coordinate.latitude.degreesToRadians
         let lon1 = self.coordinate.longitude.degreesToRadians
-        
+
         let lat2 = destinationLocation.coordinate.latitude.degreesToRadians
         let lon2 = destinationLocation.coordinate.longitude.degreesToRadians
-        
+
         let dLon = lon2 - lon1
-        
+
         let y = sin(dLon) * cos(lat2)
         let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
-        let radiansBearing = atan2(y, x).radiansToDegrees
+        let radiansBearing = atan2(y, x)
         
-       if radiansBearing >= 0 {
-            return CGFloat(radiansBearing)
-        } else {
-            return CGFloat(radiansBearing + 360)
-        }
+        return CGFloat(radiansBearing)
     }
     
     func bearingToLocationDegrees(destinationLocation: CLLocation) -> CGFloat {
@@ -103,7 +100,7 @@ private extension CLLocation {
     }
 }
 
-private extension CGFloat {
+ extension CGFloat {
     var degreesToRadians: CGFloat { return self * .pi / 180 }
     var radiansToDegrees: CGFloat { return self * 180 / .pi }
 }

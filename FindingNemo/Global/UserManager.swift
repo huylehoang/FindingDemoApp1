@@ -39,7 +39,7 @@ class UserManager {
     
     private var builder: UserBuilder!
 
-    init() {
+    private init() {
         setup()
     }
     
