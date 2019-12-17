@@ -57,6 +57,7 @@ class Firebase {
             connectedUserListener?.remove()
             connectedUserListener = nil
         }
+        geoQuery = nil
     }
     
     func setLocation(lat: CLLocationDegrees, long: CLLocationDegrees) {
@@ -97,10 +98,16 @@ class Firebase {
     }
     
     func startQueryNearbyUser(completion: @escaping (User) -> Void) {
-        guard UserManager.shared.needFetchNearByUser else { return }
+        guard UserManager.shared.needFetchNearByUser else {
+            if geoQuery != nil { geoQuery = nil }
+            return
+        }
         geoQuery = geoFire.query(withCenter: UserManager.shared.currentCLLocation, radius: radius.toKM)
         _ = geoQuery?.observe(.documentEntered, with: { (tmpKey, _) in
-            guard let key = tmpKey, key != UserManager.shared.currentUser.uuid else { return }
+            guard let key = tmpKey
+                , key != UserManager.shared.currentUser.uuid
+                , UserManager.shared.noConnedtedUUID // currently can't find out a way to remove query observer, add condition to avoid connect to new user entered while connecting
+                else { return }
             self.fetch(byUUID: key) { (user) in
                 if let user = user, user.isValidToConnect {
                     completion(User(builder: UserBuilder(builderClosure: { (builder) in
