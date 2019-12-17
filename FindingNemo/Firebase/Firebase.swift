@@ -152,6 +152,18 @@ class Firebase {
         }
     }
     
+    func appWillTerminate() {
+        self.ref.document(UserManager.shared.currentUser.uuid).updateData([
+            ParamKeys.isFinding.rawValue: false,
+            ParamKeys.connectedToUUID.rawValue: FieldValue.delete()
+        ])
+        guard let connectedUUID = UserManager.shared.currentUser.connectedToUUID
+            else { return }
+        self.ref.document(connectedUUID).updateData([
+            ParamKeys.connectedToUUID.rawValue: FieldValue.delete()
+        ])
+    }
+    
     func userConnectionObserver(completion: @escaping (String?) -> Void) {
         currentUserRef.addSnapshotListener { (snapshot, error) in
             guard error == nil, let snapshot = snapshot, snapshot.exists
