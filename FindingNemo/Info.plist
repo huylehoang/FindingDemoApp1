@@ -26,6 +26,8 @@
 	<string>Always and in usage permissions</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>when in usage permissions</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This is needed for the indoor positioning feature</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

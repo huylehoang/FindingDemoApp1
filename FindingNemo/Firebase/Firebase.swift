@@ -106,7 +106,7 @@ class Firebase {
         _ = geoQuery?.observe(.documentEntered, with: { (tmpKey, _) in
             guard let key = tmpKey
                 , key != UserManager.shared.currentUser.uuid
-                , UserManager.shared.noConnedtedUUID // currently can't find out a way to remove query observer, add condition to avoid connect to new user entered while connecting
+                , UserManager.shared.needFetchNearByUser // currently can't find out a way to remove query observer, add condition to avoid connect to new user entered while connecting
                 else { return }
             self.fetch(byUUID: key) { (user) in
                 if let user = user, user.isValidToConnect {

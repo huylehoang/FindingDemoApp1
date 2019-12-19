@@ -12,18 +12,14 @@ import CoreLocation
 struct User: UserProtocol {
     var uuid: String!
     var isFinding: Bool!
-    var localLatitude: CLLocationDegrees!
-    var localLongtitude: CLLocationDegrees!
+    var localLocation: CLLocation!
     var connectedToUUID: String?
-    var isValidToConnect: Bool
     
     init(builder: UserBuilder) {
         self.uuid = builder.uuid
         self.isFinding = builder.isFinding
-        self.localLatitude = builder.localLatitude
-        self.localLongtitude = builder.localLongtitude
+        self.localLocation = builder.localLocation
         self.connectedToUUID = builder.connectedToUUID
-        self.isValidToConnect = builder.isValidToConnect
     }
     
     var basicInfo: [String: Any] {

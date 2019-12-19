@@ -32,7 +32,7 @@ class UserManager {
     }
     
     var currentCLLocation: CLLocation {
-        return CLLocation(latitude: builder.localLatitude, longitude: builder.localLongtitude)
+        return builder.localLocation
     }
     
     var connectedCLLLocation: CLLocation?
@@ -48,8 +48,7 @@ class UserManager {
     }
     
     func set(location: CLLocationCoordinate2D) {
-        builder.localLatitude = location.latitude
-        builder.localLongtitude = location.longitude
+        builder.localLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
         Firebase.shared.setLocation(lat: location.latitude, long: location.longitude)
     }
     
