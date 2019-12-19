@@ -207,15 +207,11 @@ private extension LocationManager {
             return false
         }
         
-        let distance = location.distance(from: UserManager.shared.currentCLLocation)
-        print("tmp distanec \(distance)")
-        
         guard isMoving && location.distance(from: UserManager.shared.currentCLLocation) >= 1.2 else {
             print("Location change but iphone is stationary")
             return false
         }
         
-        print("distance \(distance)")
         return true
     }
     
