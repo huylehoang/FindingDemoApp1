@@ -58,16 +58,45 @@ class UserManager {
         Firebase.shared.updateUser()
     }
     
-    func set(connectedToUUID: String?, inObserver: Bool = false, completion: (() -> Void)? = nil) {
+    func set(connected: User?, inObserver: Bool = false, completion: (() -> Void)? = nil) {
         builder.isFinding = false
-        builder.connectedToUUID = connectedToUUID
-        guard !inObserver else { return }
-        Firebase.shared.updateUser(withValues: .connectedUUID(connected: connectedToUUID != nil)) {
-            completion?()
+        if let connectedUser = connected {
+            builder.connectedToUUID = connectedUser.uuid
+            if !inObserver {
+                Firebase.shared.updateUser(withValues: .connectedUUID(connected: true))
+                Firebase.shared.updateUser(connectedUser, withValues: .connectedUUID(connected: true))
+            }
+        } else {
+            if !inObserver {
+                disconnect()
+            }
+            builder.connectedToUUID = nil
         }
     }
     
     func set(connectedLocation: CLLocation?) {
         self.connectedCLLLocation = connectedLocation
+    }
+    
+    func disconnect() {
+        if let connectedUUID = UserManager.shared.currentUser.connectedToUUID {
+            Firebase.shared.fetch(byUUID: connectedUUID) { (connectedUser) in
+                self.fetchAndDisconnect(connectedUser)
+            }
+        } else {
+            Firebase.shared.fetch(byUUID: currentUser.uuid) { (user) in
+                if let connectedUUID = user?.connectedToUUID {
+                    Firebase.shared.fetch(byUUID: connectedUUID) { (connectedUser) in
+                        self.fetchAndDisconnect(connectedUser)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func fetchAndDisconnect(_ connectedUser: User?) {
+        Firebase.shared.updateUser(withValues: .connectedUUID(connected: false))
+        guard let connectedUser = connectedUser else { return }
+        Firebase.shared.updateUser(connectedUser, withValues: .connectedUUID(connected: false))
     }
 }

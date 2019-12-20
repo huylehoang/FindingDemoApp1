@@ -128,6 +128,7 @@ class LocationManager: NSObject {
         guard isUpdatingLocation else { return }
         print("stop updating location")
         self.activityManager.stopActivityUpdates()
+        self.pedometer.stopUpdates()
         self.locationManager.stopUpdatingLocation()
         self.stopUpdatingHeading()
         isUpdatingLocation = false
@@ -220,23 +221,44 @@ private extension LocationManager {
         }
         
         guard location.horizontalAccuracy < 100 else {
-            print("Accuracy is too low \(location.horizontalAccuracy)")
+            print("Accuracy is too low \(location.horizontalAccuracy)\n")
             return false
         }
         
-        guard location.timestamp.timeIntervalSince(UserManager.shared.currentCLLocation.timestamp) >= 30 else {
-            print("Not passed 30 seconds since the last updated location")
-            return false
-        }
-        
-        guard isMoving
-            , let distanceTravelled = self.movingDistance
-            , location.distance(from: UserManager.shared.currentCLLocation) <= distanceTravelled + 1.2 else {
-                print("Location is changed but iphone is stationary or distance from last location greater than estimated distance travelled")
+        let distance = location.distance(from: UserManager.shared.currentCLLocation)
+        if isMoving, let distanceTravelled = self.movingDistance {
+            if distance <= distanceTravelled + 1.2 {
+                print("New location while moving: \(location.coordinate)\n")
+                return true
+            }  else {
+                print("Location distance from last location is greater than estimated distance")
+                print("Location distance: \(distance)")
+                print("Estimated distance travelled: \(distanceTravelled)\n")
                 return false
+            }
+        } else {
+            let passedTime = location.timestamp.timeIntervalSince(UserManager.shared.currentCLLocation.timestamp)
+            if passedTime  >= 30 {
+                if distance <= 1.2 {
+                    print("New location while standing: \(location.coordinate)\n")
+                    return true
+                } else {
+                    if passedTime >= 60 {
+                        print("There are any new location updated for too long (60 seconds)")
+                        print("Passed time (seconds): \(passedTime)\n")
+                        return true
+                    } else {
+                        print("New location change significant to last location while standing: \(distance)")
+                        print("Passed time (seconds): \(passedTime)\n")
+                        return false
+                    }
+                }
+            } else {
+                print("Not passed 30 seconds since the last updated location")
+                print("Passed time (seconds): \(passedTime)\n")
+                return false
+            }
         }
-        
-        return true
     }
     
     func valid(_ heading: CLHeading) -> Bool {

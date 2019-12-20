@@ -47,6 +47,11 @@ class Firebase {
     private var connectedUserListener: ListenerRegistration?
     private var radius: Double = 5 // meters
     
+    private let disconnectData: [String: Any] = [
+        ParamKeys.isFinding.rawValue: false,
+        ParamKeys.connectedToUUID.rawValue: FieldValue.delete()
+    ]
+    
     private init() {
         geoFire = GeoFirestore(collectionRef: ref)
         currentUserRef = ref.document(UserManager.shared.currentUser.uuid)
@@ -145,7 +150,7 @@ class Firebase {
             completion?()
         case .connectedUUID(let connected):
             if !connected {
-                self.ref.document(user.uuid).updateData([ParamKeys.connectedToUUID.rawValue: FieldValue.delete()]) { (error) in
+                self.ref.document(user.uuid).updateData(self.disconnectData) { (error) in
                     if let error = error {
                         print("Remove connected uuid error \(error.localizedDescription)")
                     } else {
@@ -160,35 +165,34 @@ class Firebase {
     }
     
     func appWillTerminate() {
-        self.ref.document(UserManager.shared.currentUser.uuid).updateData([
-            ParamKeys.isFinding.rawValue: false,
-            ParamKeys.connectedToUUID.rawValue: FieldValue.delete()
-        ])
+        self.ref.document(UserManager.shared.currentUser.uuid).updateData(disconnectData)
         guard let connectedUUID = UserManager.shared.currentUser.connectedToUUID
             else { return }
-        self.ref.document(connectedUUID).updateData([
-            ParamKeys.connectedToUUID.rawValue: FieldValue.delete()
-        ])
+        self.ref.document(connectedUUID).updateData(disconnectData)
     }
     
-    func userConnectionObserver(completion: @escaping (String?) -> Void) {
+    func userConnectionObserver(completion: @escaping (User?) -> Void) {
         currentUserRef.addSnapshotListener { (snapshot, error) in
             guard error == nil, let snapshot = snapshot, snapshot.exists
                 else { return }
             if UserManager.shared.noConnedtedUUID
-                , let connectedUUID = self.completionResult(with: snapshot)
+                , self.checkUserIsConnected(with: snapshot)
             {
-                completion(connectedUUID)
+                completion(User(builder: UserBuilder(with: snapshot)))
             } else if !UserManager.shared.noConnedtedUUID
-                , self.completionResult(with: snapshot) == nil
+                , !self.checkUserIsConnected(with: snapshot)
             {
                 completion(nil)
             }
         }
     }
     
-    private func completionResult(with snapshot: DocumentSnapshot) -> String? {
-        return snapshot.subcrip(ParamKeys.connectedToUUID) as? String
+    private func checkUserIsConnected(with snapshot: DocumentSnapshot) -> Bool {
+        if let connectedUUID = snapshot.subcrip(ParamKeys.connectedToUUID) as? String {
+            return connectedUUID != UserManager.shared.currentUser.uuid
+        } else {
+            return false
+        }
     }
     
 }
