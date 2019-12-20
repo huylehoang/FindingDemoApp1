@@ -44,7 +44,6 @@ class LocationManager: NSObject {
     var error: ErrorCallback?
     var heading: CLLocationDirection?
     var newHeading: HeadingCallBack?
-    var test: ((String) -> Void)?
     
     private var locationManager: CLLocationManager!
     private var activityManager: CMMotionActivityManager!
