@@ -44,12 +44,22 @@ class LocationManager: NSObject {
     var error: ErrorCallback?
     var heading: CLLocationDirection?
     var newHeading: HeadingCallBack?
+    var test: ((String) -> Void)?
     
     private var locationManager: CLLocationManager!
     private var activityManager: CMMotionActivityManager!
+    private var pedometer: CMPedometer!
     private var isUpdatingLocation: Bool = false
     private var isUpdatingHeading: Bool = false
-    private var isMoving = false
+    private var isMoving = false {
+        didSet {
+            if isMoving == false {
+                movingDistance = nil
+                pedometer.stopUpdates()
+            }
+        }
+    }
+    private var movingDistance: Double?
     
     private override init() {
         super.init()
@@ -64,6 +74,7 @@ class LocationManager: NSObject {
         self.locationManager.allowsBackgroundLocationUpdates = true
         self.locationManager.pausesLocationUpdatesAutomatically = false
         self.activityManager = CMMotionActivityManager()
+        self.pedometer = CMPedometer()
     }
     
     func startUpdatingLocation() {
@@ -97,8 +108,19 @@ class LocationManager: NSObject {
             } else {
                 if motion.walking || motion.running || motion.cycling || motion.automotive {
                     self.isMoving = true
+                    self.startUpdatePedometer(from: motion.startDate)
                 }
             }
+        }
+    }
+    
+    private func startUpdatePedometer(from: Date) {
+        pedometer.startUpdates(from: Date()) { (pedometerData, error) in
+            guard let pedometerData = pedometerData
+                , error == nil
+                , let distance = pedometerData.distance as? Double
+                else { return }
+            self.movingDistance = distance
         }
     }
     
@@ -207,9 +229,11 @@ private extension LocationManager {
             return false
         }
         
-        guard isMoving && location.distance(from: UserManager.shared.currentCLLocation) >= 1.2 else {
-            print("Location change but iphone is stationary")
-            return false
+        guard isMoving
+            , let distanceTravelled = self.movingDistance
+            , location.distance(from: UserManager.shared.currentCLLocation) <= distanceTravelled + 1.2 else {
+                print("Location is changed but iphone is stationary or distance from last location greater than estimated distance travelled")
+                return false
         }
         
         return true

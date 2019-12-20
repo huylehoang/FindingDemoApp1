@@ -19,7 +19,20 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         lblInfo.text = "Welcome"
         mainBtn.setTitle("Start", for: .normal)
-        setup()
+//        setup()
+        LocationManager.shared.currentLocation = { (location) in
+            UserManager.shared.set(location: location)
+            self.lblInfo.text = "Current user location\n\(UserManager.shared.currentCLLocation.coordinate.latitude)\n\(UserManager.shared.currentCLLocation.coordinate.longitude)"
+        }
+        
+        LocationManager.shared.error = { (error) in
+            self.lblInfo.text = error.errorDescription
+            self.mainBtn.setTitle("Start", for: .normal)
+        }
+        
+        LocationManager.shared.test = { (test) in
+            self.lblInfo.text = test
+        }
     }
 
     @IBAction func buttonPressed(_ sender: UIButton) {
