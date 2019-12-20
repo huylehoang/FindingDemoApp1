@@ -60,6 +60,7 @@ class LocationManager: NSObject {
         }
     }
     private var movingDistance: Double?
+    private var needWarmup = false
     
     private override init() {
         super.init()
@@ -80,6 +81,7 @@ class LocationManager: NSObject {
     func startUpdatingLocation() {
         guard !isUpdatingLocation else { return }
         print("start updating location")
+        needWarmup = true
         self.locationManager.startUpdatingLocation()
         self.startMotionActivity()
         isUpdatingLocation = true
@@ -132,6 +134,7 @@ class LocationManager: NSObject {
         self.locationManager.stopUpdatingLocation()
         self.stopUpdatingHeading()
         isUpdatingLocation = false
+        needWarmup = false
         if let error = error {
             self.error?(error)
         } else {
@@ -215,9 +218,15 @@ private extension LocationManager {
             return false
         }
         
-        guard UserManager.shared.readyForUpdatingLocation else {
-            print("Prepare first location")
-            return location.horizontalAccuracy < 70
+        guard !needWarmup else {
+            if location.horizontalAccuracy < 70 {
+                print("Prepare first location")
+                needWarmup = false
+                return true
+            } else {
+                print("First location accuracy is too low \(location.horizontalAccuracy)")
+                return false
+            }
         }
         
         guard location.horizontalAccuracy < 100 else {
