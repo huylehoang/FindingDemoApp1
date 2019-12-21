@@ -115,8 +115,8 @@ class LocationManager: NSObject {
         }
     }
     
-    private func startUpdatePedometer(from: Date) {
-        pedometer.startUpdates(from: Date()) { (pedometerData, error) in
+    private func startUpdatePedometer(from date: Date) {
+        pedometer.startUpdates(from: date) { (pedometerData, error) in
             guard let pedometerData = pedometerData
                 , error == nil
                 , let distance = pedometerData.distance as? Double
