@@ -59,7 +59,6 @@ class LocationManager: NSObject {
         }
     }
     private var movingDistance: Double?
-    private var needWarmup = false
     
     private override init() {
         super.init()
@@ -80,7 +79,6 @@ class LocationManager: NSObject {
     func startUpdatingLocation() {
         guard !isUpdatingLocation else { return }
         print("start updating location")
-        needWarmup = true
         self.locationManager.startUpdatingLocation()
         self.startMotionActivity()
         isUpdatingLocation = true
@@ -133,7 +131,6 @@ class LocationManager: NSObject {
         self.locationManager.stopUpdatingLocation()
         self.stopUpdatingHeading()
         isUpdatingLocation = false
-        needWarmup = false
         if let error = error {
             self.error?(error)
         } else {
@@ -217,20 +214,14 @@ private extension LocationManager {
             return false
         }
         
-        guard !needWarmup else {
-            if location.horizontalAccuracy < 70 {
-                print("Prepare first location")
-                needWarmup = false
-                return true
-            } else {
-                print("First location accuracy is too low \(location.horizontalAccuracy)")
-                return false
-            }
-        }
-        
-        guard location.horizontalAccuracy < 100 else {
+        guard location.horizontalAccuracy < 20 else {
             print("Accuracy is too low \(location.horizontalAccuracy)\n")
             return false
+        }
+        
+        guard UserManager.shared.readyForUpdatingLocation else {
+            print("First Location \(location.coordinate)")
+            return true
         }
         
         let distance = location.distance(from: UserManager.shared.currentCLLocation)
@@ -246,13 +237,15 @@ private extension LocationManager {
             }
         } else {
             let passedTime = location.timestamp.timeIntervalSince(UserManager.shared.currentCLLocation.timestamp)
-            if passedTime  >= 30 {
+            if passedTime >= 30 {
                 if distance <= 1.2 {
-                    print("New location while standing: \(location.coordinate)\n")
+                    print("New location while standing: \(location.coordinate)")
+                    print("Distance to last location: \(distance)\n")
                     return true
                 } else {
                     if passedTime >= 60 {
                         print("There are any new location updated for too long (60 seconds)")
+                        print("Distance to last location: \(distance)")
                         print("Passed time (seconds): \(passedTime)\n")
                         return true
                     } else {
