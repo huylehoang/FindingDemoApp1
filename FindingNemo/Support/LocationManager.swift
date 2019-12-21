@@ -72,7 +72,7 @@ class LocationManager: NSObject {
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.allowsBackgroundLocationUpdates = true
-        self.locationManager.pausesLocationUpdatesAutomatically = false
+        self.locationManager.pausesLocationUpdatesAutomatically = true
         self.activityManager = CMMotionActivityManager()
         self.pedometer = CMPedometer()
     }
