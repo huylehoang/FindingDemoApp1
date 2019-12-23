@@ -47,9 +47,9 @@ class UserManager {
         builder = UserBuilder.standard
     }
     
-    func set(location: CLLocationCoordinate2D) {
-        builder.localLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
-        Firebase.shared.setLocation(lat: location.latitude, long: location.longitude)
+    func set(location: CLLocation) {
+        builder.localLocation = location
+        Firebase.shared.setLocation(lat: location.coordinate.latitude, long: location.coordinate.longitude)
     }
     
     func set(isFinding: Bool) {

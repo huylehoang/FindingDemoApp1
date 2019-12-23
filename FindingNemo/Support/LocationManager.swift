@@ -37,7 +37,7 @@ enum LocationError: LocalizedError {
 class LocationManager: NSObject {
     static let shared = LocationManager()
     
-    typealias LocationCallBack = (CLLocationCoordinate2D) -> Void
+    typealias LocationCallBack = (CLLocation) -> Void
     typealias HeadingCallBack = () -> Void
     typealias ErrorCallback = (LocationError) -> Void
     var currentLocation: LocationCallBack?
@@ -88,24 +88,26 @@ class LocationManager: NSObject {
         guard CMMotionActivityManager.isActivityAvailable() else { return }
         self.activityManager.startActivityUpdates(to: .main) { (motionActivity) in
             guard let motion = motionActivity else {
-                print("no motion")
+                print("no motion\n")
                 self.isMoving = false
                 return
             }
             guard motion.confidence.rawValue > 0 else {
-                print("motion confidence is too low")
+                print("motion confidence is too low\n")
                 self.isMoving = false
                 return
             }
             guard self.isNewEvent(checkBy: motion.startDate) else {
-                print("start date is not new")
+                print("start date is not new\n")
                 self.isMoving = false
                 return
             }
             if motion.stationary || motion.unknown {
+                print("Is standing\n")
                 self.isMoving = false
             } else {
                 if motion.walking || motion.running || motion.cycling || motion.automotive {
+                    print("Is moving\n")
                     self.isMoving = true
                     self.startUpdatePedometer(from: motion.startDate)
                 }
@@ -119,6 +121,7 @@ class LocationManager: NSObject {
                 , error == nil
                 , let distance = pedometerData.distance as? Double
                 else { return }
+            print("Estimated distance travelled: \(distance)")
             self.movingDistance = distance
         }
     }
@@ -177,7 +180,7 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard isUpdatingLocation, let location = locations.last, valid(location)
             else { return }
-        self.currentLocation?(location.coordinate)
+        self.currentLocation?(location)
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -205,22 +208,32 @@ private extension LocationManager {
     
     func valid(_ location: CLLocation) -> Bool {
         guard isNewEvent(checkBy: location.timestamp) else {
-            print("Location is old")
+            print("Location is old\n")
             return false
         }
         
         guard location.horizontalAccuracy > 0 else {
-            print("Latitidue and longitude values are invalid.")
+            print("Latitidue and longitude values are invalid.\n")
             return false
         }
         
-        guard location.horizontalAccuracy < 20 else {
+        guard !UserManager.shared.readyForUpdatingLocation
+            || (UserManager.shared.readyForUpdatingLocation
+                && location.horizontalAccuracy <= UserManager.shared.currentCLLocation.horizontalAccuracy) else
+        {
+            if UserManager.shared.readyForUpdatingLocation {
+                print("New location accuracy \(location.horizontalAccuracy) is lower than last location accuracy \(UserManager.shared.currentCLLocation.horizontalAccuracy)\n")
+            }
+            return false
+        }
+        
+        guard location.horizontalAccuracy < 40 else {
             print("Accuracy is too low \(location.horizontalAccuracy)\n")
             return false
         }
         
         guard UserManager.shared.readyForUpdatingLocation else {
-            print("First Location \(location.coordinate)")
+            print("First Location \(location.coordinate)\n")
             return true
         }
         
