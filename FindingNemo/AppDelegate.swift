@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
-        Firebase.shared.appWillTerminate()
+        Firebase.shared.disconnect()
         sleep(1)
     }
 }

@@ -28,6 +28,7 @@ enum ParamKeys: String {
     case lat = "lat"
     case long = "long"
     case connectedToUUID = "connectedToUUID"
+    case needFlash = "needFlash"
 }
 
 protocol UserProtocol {
@@ -35,6 +36,7 @@ protocol UserProtocol {
     var isFinding: Bool! {get set}
     var localLocation: CLLocation! {get set}
     var connectedToUUID: String? {get set}
+    var needFlash: Bool! {get set}
 }
 
 extension UserProtocol {
@@ -52,6 +54,7 @@ class UserBuilder: UserProtocol {
     var isFinding: Bool! = false
     var localLocation: CLLocation! = CLLocation(latitude: CLLocationDegrees.zero, longitude: CLLocationDegrees.zero)
     var connectedToUUID: String? = nil
+    var needFlash: Bool! = false
     
     typealias BuilderClosure = (UserBuilder) -> ()
     
@@ -60,6 +63,7 @@ class UserBuilder: UserProtocol {
             self.uuid = snapshot.documentID
             self.isFinding = snapshot.subcrip(.isFinding) as? Bool ?? false
             self.connectedToUUID = snapshot.subcrip(.connectedToUUID) as? String
+            self.needFlash = snapshot.subcrip(.needFlash) as? Bool
         }
         builderClosure?(self)
     }

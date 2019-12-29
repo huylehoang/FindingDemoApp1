@@ -11,12 +11,16 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var arrowImgView: UIImageView!
+    @IBOutlet weak var lblDistance: UILabel!
     @IBOutlet weak var lblInfo: UILabel!
+    @IBOutlet weak var lblSubInfo: UILabel!
+    @IBOutlet weak var lblDeviceMotion: UILabel!
     @IBOutlet weak var mainBtn: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        reset()
         lblInfo.text = "Welcome"
         mainBtn.setTitle("Start", for: .normal)
         setup()
@@ -44,8 +48,9 @@ private extension ViewController {
                 // Connect to nearby user, update current user and nearby user to firebase
                 UserManager.shared.set(connected: connectedUser)
                 // After updated firebase that both user are connected, start observe connected user location, this observer will not be triggered if current user is connected by another user (userConnectedObserver)
-                Firebase.shared.observeConnectedLocation { (location) in
+                Firebase.shared.observeConnectedLocation { (location, needFlash) in
                     UserManager.shared.set(connectedLocation: location)
+                    UserManager.shared.set(needFlash: needFlash)
                     self.rotate()
                 }
             }
@@ -57,6 +62,14 @@ private extension ViewController {
             } else {
                 self.rotate()
             }
+        }
+        
+        LocationManager.shared.processing = { (processing) in
+            self.lblSubInfo.text = processing
+        }
+        
+        LocationManager.shared.deviceMotion = { (deviceMotion) in
+            self.lblDeviceMotion.text = deviceMotion
         }
 
         // Update direction when updated heading, in case connected user did not change location
@@ -72,24 +85,26 @@ private extension ViewController {
         LocationManager.shared.error = { (error) in
             UserManager.shared.set(isFinding: false)
             Firebase.shared.resetListener()
+            self.reset()
             self.lblInfo.text = error.errorDescription
             self.mainBtn.setTitle("Start", for: .normal)
         }
         
         // Detect when another user connected/disconnected to current user
-        Firebase.shared.userConnectionObserver { (connectedUser) in
-            if let connectedUser = connectedUser {
-                UserManager.shared.set(connected: connectedUser, inObserver: true)
+        Firebase.shared.userConnectionObserver { (currentUser) in
+            if let currentUser = currentUser {
+                UserManager.shared.set(currentUser: currentUser)
                 self.lblInfo.text = "Getting connected location"
                 self.mainBtn.setTitle("Disconnect", for: .normal)
                 LocationManager.shared.startUpdatingHeading()
                 // Detect when connected user update new location. Observer is added here because current user is connected by another user, not by fetching near by user (startQueryNearbyUser)
-                Firebase.shared.observeConnectedLocation { (location) in
+                Firebase.shared.observeConnectedLocation { (location, needFlash) in
                     UserManager.shared.set(connectedLocation: location)
+                    UserManager.shared.set(needFlash: needFlash)
                     self.rotate()
                 }
             } else {
-                UserManager.shared.set(connected: nil, inObserver: true)
+                UserManager.shared.set(currentUser: nil)
                 self.arrowImgView.transform = CGAffineTransform.identity
                 LocationManager.shared.stopUpdatingLocation(bySpecific: LocationError.turnOffByDisconnectFromOtherUser)
             }
@@ -98,9 +113,43 @@ private extension ViewController {
     
     func rotate() {
         self.lblInfo.text = "Direct to location\n\(UserManager.shared.connectedCLLLocation?.coordinate.latitude ?? 0.0)\n\(UserManager.shared.connectedCLLLocation?.coordinate.longitude ?? 0.0)"
-        UIView.animate(withDuration: 0.3) {
-            self.arrowImgView.transform = CGAffineTransform(rotationAngle: Direction.shared.angle)
+        if UserManager.shared.currentUser.needFlash,
+            let distance = Direction.shared.distance
+        {
+            if distance > Direction.shared.disconnectThreshold {
+                LocationManager.shared.stopUpdatingLocation()
+                UserManager.shared.disconnect()
+            } else {
+                showArrow(false)
+                self.lblDistance.text = "Distance to connected: \(distance) meters"
+            }
+        } else {
+            if let distance = Direction.shared.distance, distance < Direction.shared.flashThreshold {
+                UserManager.shared.set(needFlash: true)
+            } else {
+                showArrow(true)
+                UIView.animate(withDuration: 0.3) {
+                    self.arrowImgView.transform = CGAffineTransform(rotationAngle: Direction.shared.angle)
+                }
+            }
         }
+    }
+    
+    func showArrow(_ show: Bool) {
+        if arrowImgView.isHidden == show {
+            arrowImgView.isHidden = !show
+        }
+        if lblDistance.isHidden != show {
+            lblDistance.isHidden = show
+        }
+    }
+    
+    func reset() {
+        lblSubInfo.text = "Location Processing Info"
+        lblDeviceMotion.text = "Device Motion Info"
+        lblDistance.text = ""
+        arrowImgView.transform = CGAffineTransform.identity
+        showArrow(true)
     }
     
     func pressed(_ button: UIButton) {
@@ -113,7 +162,6 @@ private extension ViewController {
             LocationManager.shared.stopUpdatingLocation()
         case "Disconnect":
             LocationManager.shared.stopUpdatingLocation()
-            arrowImgView.transform = CGAffineTransform.identity
             
             // Disconnect, update firebase both current user and connected user
             UserManager.shared.disconnect()

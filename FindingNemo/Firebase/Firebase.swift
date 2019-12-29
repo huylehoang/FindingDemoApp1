@@ -12,18 +12,16 @@ import Geofirestore
 import CoreLocation
 
 enum NeedUpdateValues {
-    case connectedUUID(connected: Bool), basic
+    case connectedUUID, needFlash, basic
 }
 
 private extension NeedUpdateValues {
     func info(of user: User) -> [String: Any] {
         switch self {
-        case .connectedUUID(let connect):
-            if connect {
-                return user.infoWithConnectedUUID
-            } else {
-                return user.basicInfo
-            }
+        case .connectedUUID:
+            return user.infoWithConnectedUUID
+        case .needFlash:
+            return user.needFlashInfo
         case .basic:
             return user.basicInfo
         }
@@ -45,11 +43,12 @@ class Firebase {
     private var geoFire: GeoFirestore!
     private var geoQuery: GFSCircleQuery?
     private var connectedUserListener: ListenerRegistration?
-    private var radius: Double = 5 // meters
+    private var radius: Double = 10 // meters
     
     private let disconnectData: [String: Any] = [
         ParamKeys.isFinding.rawValue: false,
-        ParamKeys.connectedToUUID.rawValue: FieldValue.delete()
+        ParamKeys.connectedToUUID.rawValue: FieldValue.delete(),
+        ParamKeys.needFlash.rawValue: FieldValue.delete()
     ]
     
     private init() {
@@ -79,14 +78,14 @@ class Firebase {
         }
     }
     
-    func observeConnectedLocation(completion: @escaping (CLLocation)->()) {
+    func observeConnectedLocation(completion: @escaping (CLLocation, Bool)->()) {
         guard UserManager.shared.readyForDirectionToConnectedUser
             , let connectedUUID = UserManager.shared.currentUser.connectedToUUID
             else { return }
-        connectedUserListener = self.ref.document(connectedUUID).addSnapshotListener { (_, error) in
-            if error == nil {
+        connectedUserListener = self.ref.document(connectedUUID).addSnapshotListener { (snapshot, error) in
+            if let snapshot = snapshot, error == nil {
                 self.getConnectedLocation { (location) in
-                    completion(location)
+                    completion(location, snapshot.subcrip(.needFlash) as? Bool ?? false)
                 }
             }
         }
@@ -96,7 +95,6 @@ class Firebase {
         guard let connectedUUID = UserManager.shared.currentUser.connectedToUUID else { return }
         self.geoFire.getLocation(forDocumentWithID: connectedUUID) { (location: CLLocation?, _) in
             if let location = location {
-                UserManager.shared.set(connectedLocation: location)
                 completion(location)
             }
         }
@@ -126,45 +124,18 @@ class Firebase {
     }
     
     func updateUser(_ user: User = UserManager.shared.currentUser,
-                    withValues values: NeedUpdateValues = .basic,
-                    completion: (() -> Void)? = nil)
+                    withValues values: NeedUpdateValues = .basic)
     {
         ref.document(user.uuid).setData(values.info(of: user), merge: true) { (error) in
             if let error = error {
                 print("Error while updating user: \(error.localizedDescription)")
             } else {
                 print("Success updating \(String(describing: user.uuid))")
-                self.removeConnectedIfNeeded(of: user, checkBy: values) {
-                    completion?()
-                }
             }
         }
     }
     
-    private func removeConnectedIfNeeded(of user: User,
-                                         checkBy values: NeedUpdateValues,
-                                         completion: (() -> Void)? = nil)
-    {
-        switch values {
-        case .basic:
-            completion?()
-        case .connectedUUID(let connected):
-            if !connected {
-                self.ref.document(user.uuid).updateData(self.disconnectData) { (error) in
-                    if let error = error {
-                        print("Remove connected uuid error \(error.localizedDescription)")
-                    } else {
-                        print("Success removing connected uuid")
-                        completion?()
-                    }
-                }
-            } else {
-                completion?()
-            }
-        }
-    }
-    
-    func appWillTerminate() {
+    func disconnect() {
         self.ref.document(UserManager.shared.currentUser.uuid).updateData(disconnectData)
         guard let connectedUUID = UserManager.shared.currentUser.connectedToUUID
             else { return }

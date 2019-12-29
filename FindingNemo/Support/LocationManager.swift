@@ -40,10 +40,13 @@ class LocationManager: NSObject {
     typealias LocationCallBack = (CLLocation) -> Void
     typealias HeadingCallBack = () -> Void
     typealias ErrorCallback = (LocationError) -> Void
+    typealias InfoCallback = (String) -> Void
     var currentLocation: LocationCallBack?
     var error: ErrorCallback?
     var heading: CLLocationDirection?
     var newHeading: HeadingCallBack?
+    var deviceMotion: InfoCallback?
+    var processing: InfoCallback?
     
     private var locationManager: CLLocationManager!
     private var activityManager: CMMotionActivityManager!
@@ -90,25 +93,40 @@ class LocationManager: NSObject {
             guard let motion = motionActivity else {
                 print("no motion\n")
                 self.isMoving = false
+                self.deviceMotion?("no motion, isMoving: \(self.isMoving)")
                 return
             }
             guard motion.confidence.rawValue > 0 else {
                 print("motion confidence is too low\n")
                 self.isMoving = false
+                self.deviceMotion?("motion confidence is too low, isMoving: \(self.isMoving)")
                 return
             }
             guard self.isNewEvent(checkBy: motion.startDate) else {
                 print("start date is not new\n")
                 self.isMoving = false
+                self.deviceMotion?("start date is not new, isMoving: \(self.isMoving)")
                 return
             }
             if motion.stationary || motion.unknown {
                 print("Is standing\n")
+                self.deviceMotion?("Stationary Or Unknown, isMoving: \(self.isMoving)")
                 self.isMoving = false
             } else {
                 if motion.walking || motion.running || motion.cycling || motion.automotive {
                     print("Is moving\n")
                     self.isMoving = true
+                    var movingMotion = ""
+                    if motion.walking {
+                        movingMotion = "Walking"
+                    } else if motion.running {
+                        movingMotion = "Running"
+                    } else if motion.cycling {
+                        movingMotion = "Cycling"
+                    } else if motion.automotive {
+                        movingMotion = "Automotive"
+                    }
+                    self.deviceMotion?("\(movingMotion), isMoving: \(self.isMoving)")
                     self.startUpdatePedometer(from: motion.startDate)
                 }
             }
@@ -123,6 +141,7 @@ class LocationManager: NSObject {
                 else { return }
             print("Estimated distance travelled: \(distance)")
             self.movingDistance = distance
+            self.deviceMotion?("Estimated distance travelled: \(distance)")
         }
     }
     
@@ -209,11 +228,13 @@ private extension LocationManager {
     func valid(_ location: CLLocation) -> Bool {
         guard isNewEvent(checkBy: location.timestamp) else {
             print("Location is old\n")
+            self.processing?("Location is old")
             return false
         }
         
         guard location.horizontalAccuracy > 0 else {
             print("Latitidue and longitude values are invalid.\n")
+            self.processing?("Latitidue and longitude values are invalid.")
             return false
         }
         
@@ -223,17 +244,20 @@ private extension LocationManager {
         {
             if UserManager.shared.readyForUpdatingLocation {
                 print("New location accuracy \(location.horizontalAccuracy) is lower than last location accuracy \(UserManager.shared.currentCLLocation.horizontalAccuracy)\n")
+                self.processing?("New location accuracy \(location.horizontalAccuracy) is lower than last location accuracy \(UserManager.shared.currentCLLocation.horizontalAccuracy)")
             }
             return false
         }
         
-        guard location.horizontalAccuracy < 40 else {
+        guard location.horizontalAccuracy < 80 else {
             print("Accuracy is too low \(location.horizontalAccuracy)\n")
+            self.processing?("Accuracy is too low \(location.horizontalAccuracy)")
             return false
         }
         
         guard UserManager.shared.readyForUpdatingLocation else {
             print("First Location \(location.coordinate)\n")
+            self.processing?("First Location \(location.coordinate)\n")
             return true
         }
         
@@ -241,11 +265,13 @@ private extension LocationManager {
         if isMoving, let distanceTravelled = self.movingDistance {
             if distance <= distanceTravelled + 1.2 {
                 print("New location while moving: \(location.coordinate)\n")
+                self.processing?("New location while moving: \(location.coordinate)")
                 return true
             }  else {
                 print("Location distance from last location is greater than estimated distance")
                 print("Location distance: \(distance)")
                 print("Estimated distance travelled: \(distanceTravelled)\n")
+                self.processing?("Location distance from last location is greater than estimated distance\nLocation distance:\n \(distance) meters\nEstimated distance travelled:\n \(distanceTravelled) meters")
                 return false
             }
         } else {
@@ -254,22 +280,26 @@ private extension LocationManager {
                 if distance <= 1.2 {
                     print("New location while standing: \(location.coordinate)")
                     print("Distance to last location: \(distance)\n")
+                    self.processing?("New location while standing:\n \(location.coordinate.latitude)\n\(location.coordinate.longitude)\nDistance to last location:\n \(distance)")
                     return true
                 } else {
                     if passedTime >= 60 {
                         print("There are any new location updated for too long (60 seconds)")
                         print("Distance to last location: \(distance)")
                         print("Passed time (seconds): \(passedTime)\n")
+                        self.processing?("There are any new location updated for too long (60 seconds)\nDistance to last location: \(distance)\nPassed time (seconds):\n \(passedTime)")
                         return true
                     } else {
                         print("New location change significant to last location while standing: \(distance)")
                         print("Passed time (seconds): \(passedTime)\n")
+                        self.processing?("New location change significant to last location while standing:\n \(distance)\nPassed time (seconds):\n \(passedTime)")
                         return false
                     }
                 }
             } else {
                 print("Not passed 30 seconds since the last updated location")
                 print("Passed time (seconds): \(passedTime)\n")
+                self.processing?("Not passed 30 seconds since the last updated location\nPassed time (seconds):\n \(passedTime)")
                 return false
             }
         }

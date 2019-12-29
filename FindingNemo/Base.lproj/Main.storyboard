@@ -16,14 +16,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Vt-2s-1BM">
+                                <rect key="frame" x="16" y="293.5" width="382" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yyn-95-33V">
                                 <rect key="frame" x="16" y="443" width="382" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRn-wI-03q">
+                                <rect key="frame" x="16" y="483.5" width="382" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zBi-mq-Pvp">
-                                <rect key="frame" x="184" y="518" width="46" height="30"/>
+                                <rect key="frame" x="184" y="736" width="46" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="buttonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eA6-Yf-IQ2"/>
@@ -36,14 +48,30 @@
                                     <constraint firstAttribute="width" constant="150" id="yx8-Ze-oIR"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YQv-Jo-RD1">
+                                <rect key="frame" x="16" y="524" width="382" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="VRn-wI-03q" firstAttribute="centerX" secondItem="yyn-95-33V" secondAttribute="centerX" id="4vf-zO-Igc"/>
                             <constraint firstItem="yyn-95-33V" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="5CA-yW-3FB"/>
+                            <constraint firstItem="YQv-Jo-RD1" firstAttribute="centerX" secondItem="VRn-wI-03q" secondAttribute="centerX" id="5IL-pD-AIJ"/>
                             <constraint firstItem="Jcx-Uh-LPx" firstAttribute="centerX" secondItem="yyn-95-33V" secondAttribute="centerX" id="5W7-SX-GES"/>
                             <constraint firstItem="zBi-mq-Pvp" firstAttribute="centerX" secondItem="yyn-95-33V" secondAttribute="centerX" id="7LF-Zb-3It"/>
+                            <constraint firstItem="zBi-mq-Pvp" firstAttribute="top" relation="greaterThanOrEqual" secondItem="YQv-Jo-RD1" secondAttribute="bottom" constant="20" id="8QG-ay-QAI"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="zBi-mq-Pvp" secondAttribute="bottom" constant="96" id="DLf-Dq-XuY"/>
                             <constraint firstItem="yyn-95-33V" firstAttribute="top" secondItem="Jcx-Uh-LPx" secondAttribute="bottom" constant="64" id="DTB-ad-L2T"/>
-                            <constraint firstItem="zBi-mq-Pvp" firstAttribute="top" secondItem="yyn-95-33V" secondAttribute="bottom" constant="54.5" id="ENe-6V-GIe"/>
+                            <constraint firstItem="YQv-Jo-RD1" firstAttribute="top" secondItem="VRn-wI-03q" secondAttribute="bottom" constant="20" id="Ewb-r2-8HG"/>
+                            <constraint firstItem="VRn-wI-03q" firstAttribute="top" secondItem="yyn-95-33V" secondAttribute="bottom" constant="20" id="F3T-5L-4eq"/>
+                            <constraint firstItem="VRn-wI-03q" firstAttribute="width" secondItem="yyn-95-33V" secondAttribute="width" id="KRD-97-4C3"/>
+                            <constraint firstItem="0Vt-2s-1BM" firstAttribute="centerY" secondItem="Jcx-Uh-LPx" secondAttribute="centerY" id="OeU-eG-Php"/>
+                            <constraint firstItem="0Vt-2s-1BM" firstAttribute="width" secondItem="yyn-95-33V" secondAttribute="width" id="SyL-UO-Sl6"/>
+                            <constraint firstItem="0Vt-2s-1BM" firstAttribute="centerX" secondItem="Jcx-Uh-LPx" secondAttribute="centerX" id="caR-Xz-9xP"/>
+                            <constraint firstItem="YQv-Jo-RD1" firstAttribute="width" secondItem="VRn-wI-03q" secondAttribute="width" id="icj-Ih-N6e"/>
                             <constraint firstItem="yyn-95-33V" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" constant="-32" id="rh3-EB-Ajs"/>
                             <constraint firstItem="yyn-95-33V" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="tBF-yh-m2S"/>
                         </constraints>
@@ -51,7 +79,10 @@
                     </view>
                     <connections>
                         <outlet property="arrowImgView" destination="Jcx-Uh-LPx" id="GA4-7L-ccU"/>
+                        <outlet property="lblDeviceMotion" destination="YQv-Jo-RD1" id="xh3-Lr-8tn"/>
+                        <outlet property="lblDistance" destination="0Vt-2s-1BM" id="4KA-Tf-Tpc"/>
                         <outlet property="lblInfo" destination="yyn-95-33V" id="66Q-As-9wp"/>
+                        <outlet property="lblSubInfo" destination="VRn-wI-03q" id="L4r-hb-OEJ"/>
                         <outlet property="mainBtn" destination="zBi-mq-Pvp" id="c4X-LX-KEu"/>
                     </connections>
                 </viewController>

@@ -13,11 +13,26 @@ class Direction {
     
     static let shared = Direction()
     
+    var flashThreshold: Double = 11.0
+    
+    var disconnectThreshold: Double = 21.0
+    
     var angle: CGFloat {
         return computeNewAngle()
     }
     
+    var distance: Double? {
+        return computeDistance()
+    }
+    
     private init() {}
+    
+    private func computeDistance() -> Double? {
+        guard let currentLocation = self.currentLocation
+            , let connectedLocation = self.connectedLocation
+            else { return nil }
+        return connectedLocation.distance(from: currentLocation)
+    }
     
     private func computeNewAngle() -> CGFloat {
         let heading: CGFloat = {

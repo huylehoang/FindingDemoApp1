@@ -14,12 +14,14 @@ struct User: UserProtocol {
     var isFinding: Bool!
     var localLocation: CLLocation!
     var connectedToUUID: String?
+    var needFlash: Bool!
     
     init(builder: UserBuilder) {
         self.uuid = builder.uuid
         self.isFinding = builder.isFinding
         self.localLocation = builder.localLocation
         self.connectedToUUID = builder.connectedToUUID
+        self.needFlash = builder.needFlash
     }
     
     var basicInfo: [String: Any] {
@@ -32,5 +34,9 @@ struct User: UserProtocol {
             basicInfo[ParamKeys.connectedToUUID.rawValue] = connectedUUID
         }
         return basicInfo
+    }
+    
+    var needFlashInfo: [String: Any] {
+        return [ParamKeys.needFlash.rawValue: needFlash!]
     }
 }
