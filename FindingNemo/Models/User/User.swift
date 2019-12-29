@@ -10,11 +10,11 @@ import Foundation
 import CoreLocation
 
 struct User: UserProtocol {
-    var uuid: String!
-    var isFinding: Bool!
-    var localLocation: CLLocation!
+    var uuid: String
+    var isFinding: Bool
+    var localLocation: CLLocation
     var connectedToUUID: String?
-    var needFlash: Bool!
+    var needFlash: Bool
     
     init(builder: UserBuilder) {
         self.uuid = builder.uuid
@@ -25,7 +25,7 @@ struct User: UserProtocol {
     }
     
     var basicInfo: [String: Any] {
-        return [ParamKeys.isFinding.rawValue: isFinding!]
+        return [ParamKeys.isFinding.rawValue: isFinding]
     }
     
     var infoWithConnectedUUID: [String: Any] {
@@ -37,6 +37,6 @@ struct User: UserProtocol {
     }
     
     var needFlashInfo: [String: Any] {
-        return [ParamKeys.needFlash.rawValue: needFlash!]
+        return [ParamKeys.needFlash.rawValue: needFlash]
     }
 }

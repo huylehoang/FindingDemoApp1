@@ -32,11 +32,11 @@ enum ParamKeys: String {
 }
 
 protocol UserProtocol {
-    var uuid: String! {get}
-    var isFinding: Bool! {get set}
-    var localLocation: CLLocation! {get set}
+    var uuid: String {get}
+    var isFinding: Bool {get set}
+    var localLocation: CLLocation {get set}
     var connectedToUUID: String? {get set}
-    var needFlash: Bool! {get set}
+    var needFlash: Bool {get set}
 }
 
 extension UserProtocol {
@@ -50,11 +50,11 @@ extension UserProtocol {
 }
 
 class UserBuilder: UserProtocol {
-    var uuid: String! = ""
-    var isFinding: Bool! = false
-    var localLocation: CLLocation! = CLLocation(latitude: CLLocationDegrees.zero, longitude: CLLocationDegrees.zero)
+    var uuid: String = ""
+    var isFinding: Bool = false
+    var localLocation: CLLocation = CLLocation(latitude: CLLocationDegrees.zero, longitude: CLLocationDegrees.zero)
     var connectedToUUID: String? = nil
-    var needFlash: Bool! = false
+    var needFlash: Bool = false
     
     typealias BuilderClosure = (UserBuilder) -> ()
     
@@ -63,7 +63,7 @@ class UserBuilder: UserProtocol {
             self.uuid = snapshot.documentID
             self.isFinding = snapshot.subcrip(.isFinding) as? Bool ?? false
             self.connectedToUUID = snapshot.subcrip(.connectedToUUID) as? String
-            self.needFlash = snapshot.subcrip(.needFlash) as? Bool
+            self.needFlash = snapshot.subcrip(.needFlash) as? Bool ?? false
         }
         builderClosure?(self)
     }

@@ -45,12 +45,6 @@ class Firebase {
     private var connectedUserListener: ListenerRegistration?
     private var radius: Double = 10 // meters
     
-    private let disconnectData: [String: Any] = [
-        ParamKeys.isFinding.rawValue: false,
-        ParamKeys.connectedToUUID.rawValue: FieldValue.delete(),
-        ParamKeys.needFlash.rawValue: FieldValue.delete()
-    ]
-    
     private init() {
         geoFire = GeoFirestore(collectionRef: ref)
         currentUserRef = ref.document(UserManager.shared.currentUser.uuid)
@@ -78,15 +72,20 @@ class Firebase {
         }
     }
     
-    func observeConnectedLocation(completion: @escaping (CLLocation, Bool)->()) {
+    func observeConnectedLocation(completion: @escaping (CLLocation?, Bool)->()) {
         guard UserManager.shared.readyForDirectionToConnectedUser
             , let connectedUUID = UserManager.shared.currentUser.connectedToUUID
             else { return }
         connectedUserListener = self.ref.document(connectedUUID).addSnapshotListener { (snapshot, error) in
-            if let snapshot = snapshot, error == nil {
-                self.getConnectedLocation { (location) in
-                    completion(location, snapshot.subcrip(.needFlash) as? Bool ?? false)
+            if let snapshot = snapshot, snapshot.exists {
+                if error == nil {
+                    self.getConnectedLocation { (location) in
+                        completion(location, snapshot.subcrip(.needFlash) as? Bool ?? false)
+                    }
                 }
+            } else {
+                completion(nil, false)
+                self.resetListener()
             }
         }
     }
@@ -136,24 +135,25 @@ class Firebase {
     }
     
     func disconnect() {
-        self.ref.document(UserManager.shared.currentUser.uuid).updateData(disconnectData)
+//        self.ref.document(UserManager.shared.currentUser.uuid).updateData(disconnectData)
+        self.ref.document(UserManager.shared.currentUser.uuid).delete()
         guard let connectedUUID = UserManager.shared.currentUser.connectedToUUID
             else { return }
-        self.ref.document(connectedUUID).updateData(disconnectData)
+//        self.ref.document(connectedUUID).updateData(disconnectData)
+        self.ref.document(connectedUUID).delete()
     }
     
     func userConnectionObserver(completion: @escaping (User?) -> Void) {
         currentUserRef.addSnapshotListener { (snapshot, error) in
-            guard error == nil, let snapshot = snapshot, snapshot.exists
-                else { return }
+            guard error == nil, let snapshot = snapshot, snapshot.exists else {
+                self.resetListener()
+                completion(nil)
+                return
+            }
             if UserManager.shared.noConnedtedUUID
                 , self.checkUserIsConnected(with: snapshot)
             {
                 completion(User(builder: UserBuilder(with: snapshot)))
-            } else if !UserManager.shared.noConnedtedUUID
-                , !self.checkUserIsConnected(with: snapshot)
-            {
-                completion(nil)
             }
         }
     }

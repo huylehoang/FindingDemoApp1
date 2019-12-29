@@ -48,11 +48,7 @@ private extension ViewController {
                 // Connect to nearby user, update current user and nearby user to firebase
                 UserManager.shared.set(connected: connectedUser)
                 // After updated firebase that both user are connected, start observe connected user location, this observer will not be triggered if current user is connected by another user (userConnectedObserver)
-                Firebase.shared.observeConnectedLocation { (location, needFlash) in
-                    UserManager.shared.set(connectedLocation: location)
-                    UserManager.shared.set(needFlash: needFlash)
-                    self.rotate()
-                }
+                self.observeConnectedLocation()
             }
 
             // Update isFinding = true if no connected user
@@ -83,7 +79,7 @@ private extension ViewController {
 
         // Error of why location manager not working or stop updating location/heading
         LocationManager.shared.error = { (error) in
-            UserManager.shared.set(isFinding: false)
+            UserManager.shared.disconnect() // Disconnect, update firebase both current user and connected user
             Firebase.shared.resetListener()
             self.reset()
             self.lblInfo.text = error.errorDescription
@@ -98,16 +94,24 @@ private extension ViewController {
                 self.mainBtn.setTitle("Disconnect", for: .normal)
                 LocationManager.shared.startUpdatingHeading()
                 // Detect when connected user update new location. Observer is added here because current user is connected by another user, not by fetching near by user (startQueryNearbyUser)
-                Firebase.shared.observeConnectedLocation { (location, needFlash) in
-                    UserManager.shared.set(connectedLocation: location)
-                    UserManager.shared.set(needFlash: needFlash)
-                    self.rotate()
-                }
+                self.observeConnectedLocation()
             } else {
                 UserManager.shared.set(currentUser: nil)
                 self.arrowImgView.transform = CGAffineTransform.identity
                 LocationManager.shared.stopUpdatingLocation(bySpecific: LocationError.turnOffByDisconnectFromOtherUser)
             }
+        }
+    }
+    
+    func observeConnectedLocation() {
+        Firebase.shared.observeConnectedLocation { (location, needFlash) in
+            guard let location = location else {
+                UserManager.shared.reset()
+                return
+            }
+            UserManager.shared.set(connectedLocation: location)
+            UserManager.shared.set(needFlash: needFlash)
+            self.rotate()
         }
     }
     
@@ -158,13 +162,8 @@ private extension ViewController {
             LocationManager.shared.startUpdatingLocation()
             self.lblInfo.text = "Updating current location"
             self.mainBtn.setTitle("Stop", for: .normal)
-        case "Stop":
+        case "Stop", "Disconnect":
             LocationManager.shared.stopUpdatingLocation()
-        case "Disconnect":
-            LocationManager.shared.stopUpdatingLocation()
-            
-            // Disconnect, update firebase both current user and connected user
-            UserManager.shared.disconnect()
         default:
             break
         }

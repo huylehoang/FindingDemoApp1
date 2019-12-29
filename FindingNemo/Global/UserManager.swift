@@ -48,7 +48,7 @@ class UserManager {
     }
     
     private func setup() {
-        builder = UserBuilder.standard
+        reset()
     }
     
     func set(location: CLLocation) {
@@ -71,12 +71,11 @@ class UserManager {
     }
     
     func set(currentUser: User?) {
-        builder.isFinding = false
         if let currentUser = currentUser {
+            builder.isFinding = false
             builder.connectedToUUID = currentUser.connectedToUUID
         } else {
-            builder.connectedToUUID = nil
-            builder.needFlash = false
+            reset()
         }
     }
     
@@ -91,6 +90,11 @@ class UserManager {
     }
     
     func disconnect() {
+        reset()
         Firebase.shared.disconnect()
+    }
+    
+    func reset() {
+        builder = UserBuilder.standard
     }
 }
