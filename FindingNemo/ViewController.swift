@@ -124,12 +124,13 @@ private extension ViewController {
                 LocationManager.shared.stopUpdatingLocation()
                 UserManager.shared.disconnect()
             } else {
-                showArrow(false)
                 self.lblDistance.text = "Distance to connected: \(distance) meters"
             }
         } else {
             if let distance = Direction.shared.distance, distance < Direction.shared.flashThreshold {
                 UserManager.shared.set(needFlash: true)
+                showArrow(false)
+                self.lblDistance.text = "Distance to connected: \(distance) meters"
             } else {
                 showArrow(true)
                 UIView.animate(withDuration: 0.3) {
