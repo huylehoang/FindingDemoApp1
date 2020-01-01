@@ -153,6 +153,8 @@ class LocationManager: NSObject {
         self.locationManager.stopUpdatingLocation()
         self.stopUpdatingHeading()
         isUpdatingLocation = false
+        isMoving = false
+        movingDistance = nil
         if let error = error {
             self.error?(error)
         } else {

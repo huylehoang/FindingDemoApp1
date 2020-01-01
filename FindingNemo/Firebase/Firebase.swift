@@ -43,7 +43,8 @@ class Firebase {
     private var geoFire: GeoFirestore!
     private var geoQuery: GFSCircleQuery?
     private var connectedUserListener: ListenerRegistration?
-    private var radius: Double = 10 // meters
+    private var currentUserListener: ListenerRegistration?
+    private var radius: Double = 5 // meters
     
     private init() {
         geoFire = GeoFirestore(collectionRef: ref)
@@ -54,6 +55,10 @@ class Firebase {
         if connectedUserListener != nil {
             connectedUserListener?.remove()
             connectedUserListener = nil
+        }
+        if currentUserListener != nil {
+            currentUserListener?.remove()
+            currentUserListener = nil
         }
         geoQuery = nil
     }
@@ -72,10 +77,14 @@ class Firebase {
         }
     }
     
-    func observeConnectedLocation(completion: @escaping (CLLocation?, Bool)->()) {
+    func connectedUserObserver(completion: @escaping (CLLocation?, Bool)->()) {
         guard UserManager.shared.readyForDirectionToConnectedUser
-            , let connectedUUID = UserManager.shared.currentUser.connectedToUUID
-            else { return }
+            , let connectedUUID = UserManager.shared.currentUser.connectedToUUID else
+        {
+            resetListener()
+            return
+        }
+        print("Observing..........")
         connectedUserListener = self.ref.document(connectedUUID).addSnapshotListener { (snapshot, error) in
             if let snapshot = snapshot, snapshot.exists {
                 if error == nil {
@@ -85,7 +94,6 @@ class Firebase {
                 }
             } else {
                 completion(nil, false)
-                self.resetListener()
             }
         }
     }
@@ -134,17 +142,19 @@ class Firebase {
         }
     }
     
-    func disconnect() {
-//        self.ref.document(UserManager.shared.currentUser.uuid).updateData(disconnectData)
-        self.ref.document(UserManager.shared.currentUser.uuid).delete()
-        guard let connectedUUID = UserManager.shared.currentUser.connectedToUUID
-            else { return }
-//        self.ref.document(connectedUUID).updateData(disconnectData)
-        self.ref.document(connectedUUID).delete()
+    func disconnect(completion: (()->Void)? = nil) {
+        self.ref.document(UserManager.shared.currentUser.uuid).delete { error in
+            if let error = error {
+                print("delete current user failed \(error.localizedDescription)")
+            } else {
+                print("delete current user successfully.........")
+                completion?()
+            }
+        }
     }
     
-    func userConnectionObserver(completion: @escaping (User?) -> Void) {
-        currentUserRef.addSnapshotListener { (snapshot, error) in
+    func currentUserObsever(completion: @escaping (User?) -> Void) {
+        currentUserListener = currentUserRef.addSnapshotListener { (snapshot, error) in
             guard error == nil, let snapshot = snapshot, snapshot.exists else {
                 self.resetListener()
                 completion(nil)

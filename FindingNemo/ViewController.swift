@@ -19,10 +19,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        reset()
-        lblInfo.text = "Welcome"
-        mainBtn.setTitle("Start", for: .normal)
+        reset(error: nil)
         setup()
     }
 
@@ -79,37 +76,36 @@ private extension ViewController {
 
         // Error of why location manager not working or stop updating location/heading
         LocationManager.shared.error = { (error) in
-            UserManager.shared.disconnect() // Disconnect, update firebase both current user and connected user
-            Firebase.shared.resetListener()
-            self.reset()
-            self.lblInfo.text = error.errorDescription
-            self.mainBtn.setTitle("Start", for: .normal)
-        }
-        
-        // Detect when another user connected/disconnected to current user
-        Firebase.shared.userConnectionObserver { (currentUser) in
-            if let currentUser = currentUser {
-                UserManager.shared.set(currentUser: currentUser)
-                self.lblInfo.text = "Getting connected location"
-                self.mainBtn.setTitle("Disconnect", for: .normal)
-                LocationManager.shared.startUpdatingHeading()
-                // Detect when connected user update new location. Observer is added here because current user is connected by another user, not by fetching near by user (startQueryNearbyUser)
-                self.observeConnectedLocation()
-            } else {
-                UserManager.shared.set(currentUser: nil)
-                self.arrowImgView.transform = CGAffineTransform.identity
-                LocationManager.shared.stopUpdatingLocation(bySpecific: LocationError.turnOffByDisconnectFromOtherUser)
+            Firebase.shared.disconnect {
+                UserManager.shared.reset()
+                Firebase.shared.resetListener()
+                self.reset(error: error.errorDescription)
             }
         }
     }
     
+    func currentUserObsever() {
+        // Detect when another user connected/disconnected to current user
+        Firebase.shared.currentUserObsever { (currentUser) in
+            guard let currentUser = currentUser else { return }
+            UserManager.shared.set(currentUser: currentUser)
+            self.lblInfo.text = "Getting connected location"
+            self.mainBtn.setTitle("Disconnect", for: .normal)
+            LocationManager.shared.startUpdatingHeading()
+            // Detect when connected user update new location. Observer is added here because current user is connected by another user, not by fetching near by user (startQueryNearbyUser)
+            self.observeConnectedLocation()
+            
+        }
+    }
+    
     func observeConnectedLocation() {
-        Firebase.shared.observeConnectedLocation { (location, needFlash) in
+        Firebase.shared.connectedUserObserver { (location, needFlash) in
             guard let location = location else {
-                UserManager.shared.reset()
+                LocationManager.shared.stopUpdatingLocation(bySpecific: LocationError.turnOffByDisconnectFromOtherUser)
                 return
             }
             UserManager.shared.set(connectedLocation: location)
+            
             UserManager.shared.set(needFlash: needFlash)
             self.rotate()
         }
@@ -122,7 +118,6 @@ private extension ViewController {
         {
             if distance > Direction.shared.disconnectThreshold {
                 LocationManager.shared.stopUpdatingLocation()
-                UserManager.shared.disconnect()
             } else {
                 self.lblDistance.text = "Distance to connected: \(distance) meters"
             }
@@ -149,7 +144,9 @@ private extension ViewController {
         }
     }
     
-    func reset() {
+    func reset(error: String?) {
+        self.lblInfo.text = error ?? "Welcome"
+        self.mainBtn.setTitle("Start", for: .normal)
         lblSubInfo.text = "Location Processing Info"
         lblDeviceMotion.text = "Device Motion Info"
         lblDistance.text = ""
@@ -161,6 +158,7 @@ private extension ViewController {
         switch button.title(for: .normal) {
         case "Start":
             LocationManager.shared.startUpdatingLocation()
+            currentUserObsever()
             self.lblInfo.text = "Updating current location"
             self.mainBtn.setTitle("Stop", for: .normal)
         case "Stop", "Disconnect":

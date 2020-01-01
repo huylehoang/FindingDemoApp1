@@ -13,9 +13,9 @@ class Direction {
     
     static let shared = Direction()
     
-    var flashThreshold: Double = 11.0
+    var flashThreshold: Double = 6.0
     
-    var disconnectThreshold: Double = 21.0
+    var disconnectThreshold: Double = 50.0
     
     var angle: CGFloat {
         return computeNewAngle()

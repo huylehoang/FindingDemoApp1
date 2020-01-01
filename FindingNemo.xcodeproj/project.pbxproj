@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		1004171B238BBD81007E429B /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1004171A238BBD81007E429B /* Direction.swift */; };
+		1018E49223BC89CF0033BCD7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1018E49123BC89CF0033BCD7 /* GoogleService-Info.plist */; };
 		10792DC52385A17C00EC278F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DC42385A17C00EC278F /* AppDelegate.swift */; };
 		10792DC72385A17C00EC278F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DC62385A17C00EC278F /* SceneDelegate.swift */; };
 		10792DC92385A17C00EC278F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DC82385A17C00EC278F /* ViewController.swift */; };
 		10792DCC2385A17C00EC278F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10792DCA2385A17C00EC278F /* Main.storyboard */; };
 		10792DCE2385A17E00EC278F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10792DCD2385A17E00EC278F /* Assets.xcassets */; };
 		10792DD12385A17E00EC278F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10792DCF2385A17E00EC278F /* LaunchScreen.storyboard */; };
-		10792DD92385A30000EC278F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 10792DD82385A30000EC278F /* GoogleService-Info.plist */; };
 		10792DDD2385A74100EC278F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DDC2385A74100EC278F /* LocationManager.swift */; };
 		10792DE02385B79D00EC278F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DDF2385B79D00EC278F /* User.swift */; };
 		10792DE32385BF1300EC278F /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10792DE22385BF1300EC278F /* UserManager.swift */; };
@@ -25,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		1004171A238BBD81007E429B /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
+		1018E49123BC89CF0033BCD7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10792DC12385A17C00EC278F /* FindingNemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FindingNemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10792DC42385A17C00EC278F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10792DC62385A17C00EC278F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -33,7 +34,6 @@
 		10792DCD2385A17E00EC278F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		10792DD02385A17E00EC278F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		10792DD22385A17E00EC278F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		10792DD82385A30000EC278F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10792DDC2385A74100EC278F /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		10792DDF2385B79D00EC278F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		10792DE22385BF1300EC278F /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -112,7 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				10792DCD2385A17E00EC278F /* Assets.xcassets */,
-				10792DD82385A30000EC278F /* GoogleService-Info.plist */,
+				1018E49123BC89CF0033BCD7 /* GoogleService-Info.plist */,
 				10792DCF2385A17E00EC278F /* LaunchScreen.storyboard */,
 			);
 			path = SupportingFiles;
@@ -222,7 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10792DD12385A17E00EC278F /* LaunchScreen.storyboard in Resources */,
-				10792DD92385A30000EC278F /* GoogleService-Info.plist in Resources */,
+				1018E49223BC89CF0033BCD7 /* GoogleService-Info.plist in Resources */,
 				10792DCE2385A17E00EC278F /* Assets.xcassets in Resources */,
 				10792DCC2385A17C00EC278F /* Main.storyboard in Resources */,
 			);
@@ -448,14 +448,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3KVCFKUZZ6;
+				DEVELOPMENT_TEAM = XM9BH9CHYG;
 				INFOPLIST_FILE = FindingNemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = LeeX.FindingNemo;
+				PRODUCT_BUNDLE_IDENTIFIER = NxtZen.AWFinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

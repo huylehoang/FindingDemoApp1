@@ -84,17 +84,13 @@ class UserManager {
     }
     
     func set(needFlash: Bool) {
-        guard builder.needFlash != needFlash else { return }
+        guard builder.needFlash != needFlash, builder.connectedToUUID != nil else { return }
         builder.needFlash = needFlash
         Firebase.shared.updateUser(withValues: .needFlash)
     }
     
-    func disconnect() {
-        reset()
-        Firebase.shared.disconnect()
-    }
-    
     func reset() {
         builder = UserBuilder.standard
+        connectedCLLLocation = nil
     }
 }

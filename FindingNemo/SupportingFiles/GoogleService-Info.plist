@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>706094876962-ppcmurr66mav1jobejjp40tl2duu7a7d.apps.googleusercontent.com</string>
+	<string>453936607100-3bs3qp727unaf5q5dprch6jopcc87gqt.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.706094876962-ppcmurr66mav1jobejjp40tl2duu7a7d</string>
+	<string>com.googleusercontent.apps.453936607100-3bs3qp727unaf5q5dprch6jopcc87gqt</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDP1oFU95EVKnvFInXlKznrezItz9css7Q</string>
+	<string>AIzaSyCIAsyXOKWI06F5xyb_1uRp2cqZsZ5TTGE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>706094876962</string>
+	<string>453936607100</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>LeeX.FindingNemo</string>
+	<string>NxtZen.AWFinder</string>
 	<key>PROJECT_ID</key>
-	<string>findingnemo-f1e5e</string>
+	<string>awfinder-93ae8</string>
 	<key>STORAGE_BUCKET</key>
-	<string>findingnemo-f1e5e.appspot.com</string>
+	<string>awfinder-93ae8.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:706094876962:ios:81260afbec6d65d1fdbd7b</string>
+	<string>1:453936607100:ios:ed422624e97898b7a47ef9</string>
 	<key>DATABASE_URL</key>
-	<string>https://findingnemo-f1e5e.firebaseio.com</string>
+	<string>https://awfinder-93ae8.firebaseio.com</string>
 </dict>
 </plist>
