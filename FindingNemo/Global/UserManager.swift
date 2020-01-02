@@ -39,7 +39,9 @@ class UserManager {
         return builder.needFlash
     }
     
-    var connectedCLLLocation: CLLocation?
+    var connectedCLLLocation: CLLocation? {
+        return builder.connectedLocation
+    }
     
     private var builder: UserBuilder!
 
@@ -80,17 +82,19 @@ class UserManager {
     }
     
     func set(connectedLocation: CLLocation?) {
-        self.connectedCLLLocation = connectedLocation
+        builder.connectedLocation = connectedLocation
     }
     
     func set(needFlash: Bool) {
-        guard builder.needFlash != needFlash, builder.connectedToUUID != nil else { return }
+        guard !noConnedtedUUID
+            , needFlash
+            , builder.needFlash != needFlash
+            else { return }
         builder.needFlash = needFlash
         Firebase.shared.updateUser(withValues: .needFlash)
     }
     
     func reset() {
         builder = UserBuilder.standard
-        connectedCLLLocation = nil
     }
 }

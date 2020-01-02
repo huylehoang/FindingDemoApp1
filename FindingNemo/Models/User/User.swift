@@ -13,6 +13,7 @@ struct User: UserProtocol {
     var uuid: String
     var isFinding: Bool
     var localLocation: CLLocation
+    var connectedLocation: CLLocation?
     var connectedToUUID: String?
     var needFlash: Bool
     
@@ -20,6 +21,7 @@ struct User: UserProtocol {
         self.uuid = builder.uuid
         self.isFinding = builder.isFinding
         self.localLocation = builder.localLocation
+        self.connectedLocation = builder.connectedLocation
         self.connectedToUUID = builder.connectedToUUID
         self.needFlash = builder.needFlash
     }
