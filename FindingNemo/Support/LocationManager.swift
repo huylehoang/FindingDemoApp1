@@ -47,6 +47,7 @@ class LocationManager: NSObject {
     var newHeading: HeadingCallBack?
     var deviceMotion: InfoCallback?
     var processing: InfoCallback?
+    var state: InfoCallback?
     
     private var locationManager: CLLocationManager!
     private var activityManager: CMMotionActivityManager!
@@ -85,6 +86,7 @@ class LocationManager: NSObject {
         self.locationManager.startUpdatingLocation()
         self.startMotionActivity()
         isUpdatingLocation = true
+        self.state?("start updating location")
     }
     
     private func startMotionActivity() {
@@ -160,6 +162,7 @@ class LocationManager: NSObject {
         } else {
             self.error?(.turnOff)
         }
+        self.state?("stop updating location")
     }
     
     func startUpdatingHeading() {
@@ -240,16 +243,16 @@ private extension LocationManager {
             return false
         }
         
-        guard !UserManager.shared.readyForUpdatingLocation
-            || (UserManager.shared.readyForUpdatingLocation
-                && location.horizontalAccuracy <= UserManager.shared.currentCLLocation.horizontalAccuracy) else
-        {
-            if UserManager.shared.readyForUpdatingLocation {
-                print("New location accuracy \(location.horizontalAccuracy) is lower than last location accuracy \(UserManager.shared.currentCLLocation.horizontalAccuracy)\n")
-                self.processing?("New location accuracy \(location.horizontalAccuracy) is lower than last location accuracy \(UserManager.shared.currentCLLocation.horizontalAccuracy)")
-            }
-            return false
-        }
+//        guard !UserManager.shared.readyForUpdatingLocation
+//            || (UserManager.shared.readyForUpdatingLocation
+//                && location.horizontalAccuracy <= UserManager.shared.currentCLLocation.horizontalAccuracy) else
+//        {
+//            if UserManager.shared.readyForUpdatingLocation {
+//                print("New location accuracy \(location.horizontalAccuracy) is lower than last location accuracy \(UserManager.shared.currentCLLocation.horizontalAccuracy)\n")
+//                self.processing?("New location accuracy \(location.horizontalAccuracy) is lower than last location accuracy \(UserManager.shared.currentCLLocation.horizontalAccuracy)")
+//            }
+//            return false
+//        }
         
         guard location.horizontalAccuracy < 80 else {
             print("Accuracy is too low \(location.horizontalAccuracy)\n")

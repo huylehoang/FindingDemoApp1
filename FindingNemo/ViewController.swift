@@ -16,7 +16,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var lblSubInfo: UILabel!
     @IBOutlet weak var lblDeviceMotion: UILabel!
     @IBOutlet weak var mainBtn: UIButton!
-
+    @IBOutlet weak var lblLocationMangerState: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         reset(error: nil)
@@ -63,6 +64,10 @@ private extension ViewController {
         
         LocationManager.shared.deviceMotion = { (deviceMotion) in
             self.lblDeviceMotion.text = deviceMotion
+        }
+        
+        LocationManager.shared.state = { (state) in
+            self.lblLocationMangerState.text = state
         }
 
         // Update direction when updated heading, in case connected user did not change location
